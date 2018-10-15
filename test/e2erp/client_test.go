@@ -98,7 +98,7 @@ func (t *testClient) setup(manifest string) error {
 }
 
 func (t *testClient) teardown() error {
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Minute)
+	ctx, _ := context.WithTimeout(context.Background(), 60*time.Minute)
 	future, err := t.rpc.Delete(ctx, t.resourceGroup, t.resourceGroup)
 	if err != nil {
 		return err
