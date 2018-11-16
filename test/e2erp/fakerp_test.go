@@ -7,6 +7,9 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+
+	"github.com/openshift/openshift-azure/test/util/scenarios/clusterreader"
+	"github.com/openshift/openshift-azure/test/util/scenarios/enduser"
 )
 
 var _ = Describe("Resource provider e2e tests [Fake]", func() {
@@ -53,5 +56,16 @@ var _ = Describe("Resource provider e2e tests [Fake]", func() {
 		By("Verifying that the mutated config blob matches the one created after the update")
 		configMatch = reflect.DeepEqual(mutated.Config.Certificates, internalAfterUpdate.Config.Certificates)
 		Expect(configMatch).To(BeTrue())
+
+		By("Ensuring that enduser tests are passing")
+		enduser.CheckPdbMutationsDisallowed(c)
+		enduser.CheckCanDeployTemplate(c)
+		enduser.CheckCrudOnInfraDisallowed(c)
+		enduser.CheckCanDeployTemplateWithPV(c)
+
+		By("Ensuring that cluster reader tests are passing")
+		clusterreader.CheckNodesLabelledCorrectly(c)
+		clusterreader.CheckPrometheusStartedCorrectly(c)
+		clusterreader.CheckCorrectImageWasUsed(c)
 	})
 })

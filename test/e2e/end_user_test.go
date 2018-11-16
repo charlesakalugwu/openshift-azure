@@ -42,7 +42,24 @@ var _ = Describe("Openshift on Azure end user e2e tests [EndUser]", func() {
 		c.cleanupProject(10 * time.Minute)
 	})
 
-	It("should disallow PDB mutations", func() {
+	It("should disallow PDB mutations", func(){
+		CheckPdbMutationsDisallowed(c)
+	})
+
+	It("should deploy a template and ensure a given text is in the contents", func() {
+		CheckCanDeployTemplate(c)
+	})
+
+	It("should not crud infra resources", func() {
+		CheckCrudOnInfraDisallowed(c)
+	})
+
+	It("should deploy a template with persistent storage and test failure modes", func() {
+		CheckCanDeployTemplateWithPV(c)
+	})
+})
+
+func CheckPdbMutationsDisallowed(c *testClient) {
 		maxUnavailable := intstr.FromInt(1)
 		selector, err := metav1.ParseToLabelSelector("key=value")
 		Expect(err).NotTo(HaveOccurred())
@@ -59,9 +76,9 @@ var _ = Describe("Openshift on Azure end user e2e tests [EndUser]", func() {
 
 		_, err = c.kc.Policy().PodDisruptionBudgets(c.namespace).Create(pdb)
 		Expect(kerrors.IsForbidden(err)).To(Equal(true))
-	})
+}
 
-	It("should deploy a template and ensure a given text is in the contents", func() {
+func CheckCanDeployTemplate(c *testClient) {
 		tpl := "nginx-example"
 		By(fmt.Sprintf("instantiating the template and getting the route (%v)", time.Now()))
 		// instantiate the template
@@ -86,9 +103,9 @@ var _ = Describe("Openshift on Azure end user e2e tests [EndUser]", func() {
 		contents, err := ioutil.ReadAll(resp.Body)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(string(contents)).Should(ContainSubstring("Welcome to your static nginx application on OpenShift"))
-	})
+}
 
-	It("should not crud infra resources", func() {
+func CheckCrudOnInfraDisallowed(c *testClient) {
 		// attempt to read secrets
 		_, err := c.kc.CoreV1().Secrets("default").List(metav1.ListOptions{})
 		Expect(kerrors.IsForbidden(err)).To(Equal(true))
@@ -132,9 +149,9 @@ var _ = Describe("Openshift on Azure end user e2e tests [EndUser]", func() {
 		result := req.Do()
 		fmt.Println(result.Error().Error())
 		Expect(result.Error().Error()).To(ContainSubstring("pods \"sync-master-000000\" is forbidden: User \"enduser\" cannot get pods/log in the namespace \"kube-system\""))
-	})
+}
 
-	It("should deploy a template with persistent storage and test failure modes", func() {
+func CheckCanDeployTemplateWithPV(c *testClient) {
 		prevCounter := 0
 
 		loopHTTPGet := func(url string, regex *regexp.Regexp, times int) error {
@@ -161,14 +178,14 @@ var _ = Describe("Openshift on Azure end user e2e tests [EndUser]", func() {
 					return fmt.Errorf("no matches found for %s", regex)
 				}
 
-				currCounter, err := strconv.Atoi(matches[1])
+				currcounter, err := strconv.Atoi(matches[1])
 				if err != nil {
 					return err
 				}
-				if currCounter <= prevCounter {
-					return fmt.Errorf("visit counter didn't increment: %d should be > than %d", currCounter, prevCounter)
+				if currcounter <= prevCounter {
+					return fmt.Errorf("visit counter didn't increment: %d should be > than %d", currcounter, prevCounter)
 				}
-				prevCounter = currCounter
+				prevCounter = currcounter
 			}
 			return nil
 		}
@@ -218,5 +235,5 @@ var _ = Describe("Openshift on Azure end user e2e tests [EndUser]", func() {
 		By(fmt.Sprintf("hitting the route again, expecting counter to increment from last (%v)", time.Now()))
 		err = loopHTTPGet(url, regex, 3)
 		Expect(err).NotTo(HaveOccurred())
-	})
-})
+}
+

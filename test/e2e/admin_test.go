@@ -20,6 +20,19 @@ var _ = Describe("Openshift on Azure admin e2e tests [AzureClusterReader]", func
 	defer GinkgoRecover()
 
 	It("should label nodes correctly", func() {
+		CheckNodesLabelledCorrectly(c)
+	})
+
+	It("should start prometheus correctly", func() {
+		CheckPrometheusStartedCorrectly(c)
+	})
+
+	It("should run the correct image", func() {
+		CheckCorrectImageWasUsed(c)
+	})
+})
+
+func CheckNodesLabelledCorrectly(c *testClient) {
 		labels := map[string]map[string]string{
 			"master": {
 				"node-role.kubernetes.io/master": "true",
@@ -42,9 +55,9 @@ var _ = Describe("Openshift on Azure admin e2e tests [AzureClusterReader]", func
 				Expect(node.Labels).To(HaveKeyWithValue(k, v))
 			}
 		}
-	})
+}
 
-	It("should start prometheus correctly", func() {
+func CheckPrometheusStartedCorrectly(c *testClient) {
 		err := wait.Poll(2*time.Second, 20*time.Minute, func() (bool, error) {
 			ss, err := c.kc.AppsV1().StatefulSets("openshift-monitoring").Get("prometheus-k8s", metav1.GetOptions{})
 			switch {
@@ -64,9 +77,9 @@ var _ = Describe("Openshift on Azure admin e2e tests [AzureClusterReader]", func
 			}
 		})
 		Expect(err).ToNot(HaveOccurred())
-	})
+}
 
-	It("should run the correct image", func() {
+func CheckCorrectImageWasUsed(c *testClient) {
 		pods, err := c.kc.CoreV1().Pods("").List(metav1.ListOptions{})
 		Expect(err).ToNot(HaveOccurred())
 		// e2e check should ensure that no reg-aws images are running on box
@@ -97,5 +110,4 @@ var _ = Describe("Openshift on Azure admin e2e tests [AzureClusterReader]", func
 			format := jsonpath.MustCompile("$.imageConfig.format").MustGetString(nodeConfig)
 			Expect(strings.HasPrefix(format, registryPrefix)).To(BeTrue())
 		}
-	})
-})
+}

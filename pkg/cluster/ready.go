@@ -3,6 +3,7 @@ package cluster
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
@@ -100,8 +101,9 @@ func (u *simpleUpgrader) waitForNodes(ctx context.Context, cs *api.OpenShiftMana
 			return err
 		}
 		for _, vm := range vms {
-			log.Infof("waiting for %s to be ready", *vm.VirtualMachineScaleSetVMProperties.OsProfile.ComputerName)
-			err = waitForReady(ctx, cs, role, *vm.VirtualMachineScaleSetVMProperties.OsProfile.ComputerName, u.kubeclient)
+			vmName := strings.ToLower(*vm.VirtualMachineScaleSetVMProperties.OsProfile.ComputerName)
+			log.Infof("waiting for %s to be ready", vmName)
+			err = waitForReady(ctx, cs, role, vmName, u.kubeclient)
 			if err != nil {
 				return err
 			}
