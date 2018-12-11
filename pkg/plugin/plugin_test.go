@@ -10,6 +10,7 @@ import (
 	"github.com/openshift/openshift-azure/pkg/api"
 	"github.com/openshift/openshift-azure/pkg/util/mocks/mock_arm"
 	"github.com/openshift/openshift-azure/pkg/util/mocks/mock_cluster"
+	"github.com/openshift/openshift-azure/pkg/util/mocks/mock_config"
 )
 
 func TestCreateOrUpdate(t *testing.T) {
@@ -254,5 +255,32 @@ func TestRecoverEtcdCluster(t *testing.T) {
 
 	if err := p.RecoverEtcdCluster(nil, nil, nil, "test-backup"); err != nil {
 		t.Errorf("plugin.RecoverEtcdCluster error = %v", err)
+	}
+}
+
+func TestRotateClusterSecrets(t *testing.T) {
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	mockGen := mock_config.NewMockGenerator(mockCtrl)
+	mockUp := mock_cluster.NewMockUpgrader(mockCtrl)
+	mockArm := mock_arm.NewMockGenerator(mockCtrl)
+
+	mockGen.EXPECT().InvalidateSecrets(nil).Return(nil)
+	mockGen.EXPECT().Generate(nil, nil).Return(nil)
+	mockUp.EXPECT().CreateClients(nil, nil).Return(nil)
+	mockArm.EXPECT().Generate(nil, nil, "", true, gomock.Any()).Return(nil, nil)
+	mockUp.EXPECT().Update(nil, nil, nil, nil, gomock.Any()).Return(nil)
+	mockUp.EXPECT().WaitForInfraServices(nil, nil).Return(nil)
+	mockUp.EXPECT().HealthCheck(nil, nil).Return(nil)
+	p := &plugin{
+		armGenerator:    mockArm,
+		clusterUpgrader: mockUp,
+		configGenerator: mockGen,
+		log:             logrus.NewEntry(logrus.StandardLogger()),
+	}
+
+	if err := p.RotateClusterSecrets(nil, nil, nil, nil); err != nil {
+		t.Errorf("plugin.RotateClusterSecrets error = %v", err)
 	}
 }

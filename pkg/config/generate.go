@@ -477,3 +477,34 @@ func (g *simpleGenerator) Generate(cs *api.OpenShiftManagedCluster, template *pl
 
 	return
 }
+
+// InvalidateSecrets removes all non-ca certificates, private keys and secrets from an
+// OpenShiftManagedCluster's Config
+func (g *simpleGenerator) InvalidateSecrets(cs *api.OpenShiftManagedCluster) (err error) {
+	c := &cs.Config
+
+	ca := c.Certificates.Ca
+	etcd := c.Certificates.EtcdCa
+	frontproxy := c.Certificates.FrontProxyCa
+	servicecatalog := c.Certificates.ServiceCatalogCa
+	servicesigning := c.Certificates.ServiceSigningCa
+	c.Certificates = api.CertificateConfig{}
+	c.Certificates.Ca = ca
+	c.Certificates.EtcdCa = etcd
+	c.Certificates.FrontProxyCa = frontproxy
+	c.Certificates.ServiceCatalogCa = servicecatalog
+	c.Certificates.ServiceSigningCa = servicesigning
+
+	c.SSHKey = nil
+	c.RegistryHTTPSecret = nil
+	c.RegistryConsoleOAuthSecret = ""
+	c.ConsoleOAuthSecret = ""
+	c.AlertManagerProxySessionSecret = nil
+	c.AlertsProxySessionSecret = nil
+	c.PrometheusProxySessionSecret = nil
+	c.SessionSecretAuth = nil
+	c.SessionSecretEnc = nil
+	c.Images.GenevaImagePullSecret = nil
+
+	return
+}

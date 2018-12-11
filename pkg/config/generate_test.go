@@ -134,3 +134,40 @@ func testRequiredFields(cs *api.OpenShiftManagedCluster, t *testing.T) {
 	assert(c.NodeBootstrapKubeconfig != nil, "NodeBootstrapKubeconfig")
 	assert(c.AzureClusterReaderKubeconfig != nil, "AzureClusterReaderKubeconfig")
 }
+
+func TestInvalidateSecrets(t *testing.T) {
+	dpc := &api.PluginConfig{}
+	populate.Walk(dpc, nil)
+	cs := &api.OpenShiftManagedCluster{}
+	populate.Walk(cs, nil)
+
+	g := &simpleGenerator{
+		pluginConfig: *dpc,
+	}
+	saved := *cs
+	if err := g.InvalidateSecrets(cs); err != nil {
+		t.Errorf("configGenerator.InvalidateSecrets error = %v", err)
+	}
+	if !reflect.DeepEqual(saved.Config, cs.Config) {
+		if !reflect.DeepEqual(saved.Config.Certificates.Ca, cs.Config.Certificates.Ca) {
+			t.Errorf("unexpected change to ca certificates after secret invalidation")
+		}
+		if !reflect.DeepEqual(saved.Config.Certificates.EtcdCa, cs.Config.Certificates.EtcdCa) {
+			t.Errorf("unexpected change to etcd ca certificates after secret invalidation")
+		}
+		if !reflect.DeepEqual(saved.Config.Certificates.FrontProxyCa, cs.Config.Certificates.FrontProxyCa) {
+			t.Errorf("unexpected change to front proxy ca certificates after secret invalidation")
+		}
+		if !reflect.DeepEqual(saved.Config.Certificates.ServiceCatalogCa, cs.Config.Certificates.ServiceCatalogCa) {
+			t.Errorf("unexpected change to service catalog ca certificates after secret invalidation")
+		}
+		if !reflect.DeepEqual(saved.Config.Certificates.ServiceSigningCa, cs.Config.Certificates.ServiceSigningCa) {
+			t.Errorf("unexpected change to service signing ca certificates after secret invalidation")
+		}
+		if !reflect.DeepEqual(saved.Config.ServiceAccountKey, cs.Config.ServiceAccountKey) {
+			t.Errorf("unexpected change to service service account key after secret invalidation")
+		}
+	} else {
+		t.Errorf("expected config blob to be different after secret invalidation")
+	}
+}

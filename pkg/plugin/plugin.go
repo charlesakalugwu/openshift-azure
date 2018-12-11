@@ -136,3 +136,40 @@ func (p *plugin) CreateOrUpdate(ctx context.Context, cs *api.OpenShiftManagedClu
 	// explicitly return nil if all went well
 	return nil
 }
+
+func (p *plugin) RotateClusterSecrets(ctx context.Context, cs *api.OpenShiftManagedCluster, deployFn api.DeployFn, pluginTemplate *pluginapi.Config) *api.PluginError {
+	p.log.Info("invalidating non-ca certificates, private keys and secrets")
+	err := p.configGenerator.InvalidateSecrets(cs)
+	if err != nil {
+		return &api.PluginError{Err: err, Step: api.PluginStepInvalidateClusterSecrets}
+	}
+	p.log.Info("regenerating config including private keys and secrets")
+	err = p.GenerateConfig(ctx, cs, pluginTemplate)
+	if err != nil {
+		return &api.PluginError{Err: err, Step: api.PluginStepRegenerateClusterSecrets}
+	}
+	err = p.clusterUpgrader.CreateClients(ctx, cs)
+	if err != nil {
+		return &api.PluginError{Err: err, Step: api.PluginStepClientCreation}
+	}
+	p.log.Info("generating ARM")
+	suffix := fmt.Sprintf("%d", time.Now().Unix())
+	azuretemplate, err := p.armGenerator.Generate(ctx, cs, "", true, suffix)
+	if err != nil {
+		return &api.PluginError{Err: err, Step: api.PluginStepGenerateARM}
+	}
+	p.log.Info("starting update")
+	if err := p.clusterUpgrader.Update(ctx, cs, azuretemplate, deployFn, suffix); err != nil {
+		return err
+	}
+	// Wait for infrastructure services to be healthy
+	p.log.Info("waiting for infra services to be ready")
+	if err := p.clusterUpgrader.WaitForInfraServices(ctx, cs); err != nil {
+		return err
+	}
+	p.log.Info("starting health check")
+	if err := p.clusterUpgrader.HealthCheck(ctx, cs); err != nil {
+		return err
+	}
+	return nil
+}
