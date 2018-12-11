@@ -52,6 +52,7 @@ const (
 	PluginStepUpdateWorkerAgentPoolWaitForReady   PluginStep = "UpdateWorkerAgentPoolWaitForReady"
 	PluginStepUpdateWorkerAgentPoolUpdateBlob     PluginStep = "UpdateWorkerAgentPoolUpdateBlob"
 	PluginStepUpdateWorkerAgentPoolDeleteVM       PluginStep = "UpdateWorkerAgentPoolDeleteVM"
+	PluginStepInvalidateClusterSecrets            PluginStep = "InvalidateClusterSecrets"
 )
 
 // PluginError error returned by CreateOrUpdate to specify the step that failed.
@@ -111,4 +112,7 @@ type Plugin interface {
 
 	// RecoverEtcdCluster recovers the cluster's etcd using the backup specified in the pluginConfig
 	RecoverEtcdCluster(ctx context.Context, cs *OpenShiftManagedCluster, deployer DeployFn, backupBlob string) *PluginError
+
+	// RotateClusterSecrets rotates the secrets in a cluster's config blob and then updates the cluster
+	RotateClusterSecrets(ctx context.Context, cs *OpenShiftManagedCluster, deployer DeployFn) *PluginError
 }
