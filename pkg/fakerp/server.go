@@ -33,6 +33,7 @@ type Server struct {
 	// the server will not process more than a single
 	// PUT request at all times.
 	inProgress chan struct{}
+	internal *http.Server
 
 	gc resources.GroupsClient
 
@@ -56,14 +57,15 @@ func (s *Server) ListenAndServe() {
 	// TODO: match the request path the real RP would use
 	http.Handle("/", s)
 	http.Handle("/admin", s)
-	httpServer := &http.Server{Addr: s.address}
+	s.internal = &http.Server{Addr: s.address}
 	s.log.Infof("starting server on %s", s.address)
-	s.log.WithError(httpServer.ListenAndServe()).Warn("Server exited.")
+	s.log.Warn("Server exited", s.internal.ListenAndServe())
 }
 
 // ServeHTTP handles an incoming request to the server.
 func (s *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	defer req.Body.Close()
+	defer s.internal.Shutdown(context.Background())
 
 	// validate the request
 	ok := s.validate(w, req)
@@ -81,6 +83,11 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		s.handlePut(w, req)
 	}
 }
+
+//func (s *Server) Shutdown(ctx context.Context) {
+//	s.log.Info("shutting down server")
+//	s.internal.Shutdown(ctx)
+//}
 
 func (s *Server) validate(w http.ResponseWriter, r *http.Request) bool {
 	if r.Method != http.MethodPut && r.Method != http.MethodGet && r.Method != http.MethodDelete {
