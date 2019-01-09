@@ -1,5 +1,5 @@
-hash: cf5adf3a57ac800a4b5a3eab3c5c627a1f7acf34e1a0762fe03afcc75c93ee42
-updated: 2018-12-10T09:00:57.339592467+10:00
+hash: 4b50f3f415cd51ec1c239365423f4d362952dc5b93806df0e0c851c98a5b8f31
+updated: 2019-01-09T11:12:31.96980611+01:00
 imports:
 - name: github.com/Azure/azure-sdk-for-go
   version: 4e8cbbfb1aeab140cd0fa97fd16b64ee18c3ca6a
@@ -9,8 +9,11 @@ imports:
   - services/dns/mgmt/2017-10-01/dns
   - services/graphrbac/1.6/graphrbac
   - services/marketplaceordering/mgmt/2015-06-01/marketplaceordering
+  - services/network/mgmt/2018-02-01/network
+  - services/network/mgmt/2018-06-01/network
   - services/resources/mgmt/2018-05-01/resources
   - services/resources/mgmt/2018-06-01/managedapplications
+  - services/storage/mgmt/2015-06-15/storage
   - services/storage/mgmt/2018-02-01/storage
   - storage
   - version
@@ -25,6 +28,10 @@ imports:
   - autorest/to
   - autorest/validation
   - version
+- name: github.com/beorn7/perks
+  version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
+  subpackages:
+  - quantile
 - name: github.com/coreos/etcd
   version: 135cf9b40738d17886f499b40bc176fc892ba5e9
   repo: https://github.com/openshift/coreos-etcd.git
@@ -47,8 +54,12 @@ imports:
   version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
 - name: github.com/dimchansky/utfbom
   version: 6c6132ff69f0f6c088739067407b5d32c52e1d0f
+- name: github.com/felixge/httpsnoop
+  version: eadd4fad6aac69ae62379194fe0219f3dbc80fd3
 - name: github.com/ghodss/yaml
   version: 0ca9ea5df5451ffdf184b4428c902747c2c11cd7
+- name: github.com/go-chi/chi
+  version: 08d9051ef6546d57c5dca8eae13e6df362e2d568
 - name: github.com/go-logr/logr
   version: 9fb12b3b21c5415d16ac18dc5cd42c1cfdd40c4e
 - name: github.com/go-logr/zapr
@@ -178,6 +189,10 @@ imports:
   version: adf5a7427709b9deb95d29d3fa8a2bf9cfd388f1
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
+- name: github.com/prometheus/client_golang
+  version: e7e903064f5e9eb5da98208bae10b475d4db0f8c
+  subpackages:
+  - prometheus
 - name: github.com/prometheus/client_model
   version: 5c3871d89910bfb32f5fcab2aa4b9ec68e65a99f
   subpackages:
@@ -188,6 +203,10 @@ imports:
   - expfmt
   - internal/bitbucket.org/ww/goautoneg
   - model
+- name: github.com/prometheus/procfs
+  version: a1dba9ce8baed984a2495b658c82687f8157b98f
+  subpackages:
+  - xfs
 - name: github.com/satori/go.uuid
   version: f58768cc1a7a7e77a3bd49e98cdd21419399b6a3
 - name: github.com/sirupsen/logrus
@@ -199,7 +218,7 @@ imports:
 - name: go.uber.org/multierr
   version: 3c4937480c32f4c13a875a1829af76c98ca3d40a
 - name: go.uber.org/zap
-  version: ff33455a0e382e8a81d14dd7c922020b6b5e7982
+  version: 67bc79d13d155c02fd008f721863ff8cc5f30659
   subpackages:
   - buffer
   - internal/bufferpool
