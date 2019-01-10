@@ -267,6 +267,7 @@ func TestRotateClusterSecrets(t *testing.T) {
 	mockArm := mock_arm.NewMockGenerator(mockCtrl)
 
 	mockGen.EXPECT().InvalidateSecrets(nil).Return(nil)
+	mockGen.EXPECT().Generate(nil, nil).Return(nil)
 	mockUp.EXPECT().CreateClients(nil, nil).Return(nil)
 	mockArm.EXPECT().Generate(nil, nil, "", true, gomock.Any()).Return(nil, nil)
 	mockUp.EXPECT().Update(nil, nil, nil, nil, gomock.Any()).Return(nil)
@@ -279,7 +280,7 @@ func TestRotateClusterSecrets(t *testing.T) {
 		log:             logrus.NewEntry(logrus.StandardLogger()),
 	}
 
-	if err := p.RotateClusterSecrets(nil, nil, nil); err != nil {
+	if err := p.RotateClusterSecrets(nil, nil, nil, nil); err != nil {
 		t.Errorf("plugin.RotateClusterSecrets error = %v", err)
 	}
 }

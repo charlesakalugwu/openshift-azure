@@ -3,9 +3,10 @@ package fakerp
 import (
 	"context"
 	"fmt"
+	"net/http"
+
 	"github.com/openshift/openshift-azure/pkg/api"
 	"github.com/openshift/openshift-azure/pkg/plugin"
-	"net/http"
 )
 
 func (s *Server) handleRotateSecrets(w http.ResponseWriter, req *http.Request) {
@@ -31,17 +32,21 @@ func (s *Server) handleRotateSecrets(w http.ResponseWriter, req *http.Request) {
 		s.internalError(w, fmt.Sprintf("Failed to configure plugin: %v", err))
 		return
 	}
+	pluginTemplate, err := GetPluginTemplate()
+	if err != nil {
+		s.internalError(w, fmt.Sprintf("Failed to configure plugin template: %v", err))
+		return
+	}
 
 	ctx = context.WithValue(ctx, api.ContextKeyClientID, cs.Properties.ServicePrincipalProfile.ClientID)
 	ctx = context.WithValue(ctx, api.ContextKeyClientSecret, cs.Properties.ServicePrincipalProfile.Secret)
 	ctx = context.WithValue(ctx, api.ContextKeyTenantID, cs.Properties.AzProfile.TenantID)
 
 	deployer := GetDeployer(s.log, cs, config)
-	if err := p.RecoverEtcdCluster(ctx, cs, deployer, ""); err != nil {
-		s.internalError(w, fmt.Sprintf("Failed to recover cluster: %v", err))
+	if err := p.RotateClusterSecrets(ctx, cs, deployer, pluginTemplate); err != nil {
+		s.internalError(w, fmt.Sprintf("Failed to rotate cluster secrets: %v", err))
 		return
 	}
 
-	s.log.Info("recovered cluster")
+	s.log.Info("rotated cluster secrets")
 }
-

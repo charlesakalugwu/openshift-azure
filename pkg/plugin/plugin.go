@@ -137,11 +137,16 @@ func (p *plugin) CreateOrUpdate(ctx context.Context, cs *api.OpenShiftManagedClu
 	return nil
 }
 
-func (p *plugin) RotateClusterSecrets(ctx context.Context, cs *api.OpenShiftManagedCluster, deployFn api.DeployFn) *api.PluginError {
+func (p *plugin) RotateClusterSecrets(ctx context.Context, cs *api.OpenShiftManagedCluster, deployFn api.DeployFn, pluginTemplate *pluginapi.Config) *api.PluginError {
 	p.log.Info("invalidating non-ca certificates, private keys and secrets")
 	err := p.configGenerator.InvalidateSecrets(cs)
 	if err != nil {
 		return &api.PluginError{Err: err, Step: api.PluginStepInvalidateClusterSecrets}
+	}
+	p.log.Info("regenerating config including private keys and secrets")
+	err = p.GenerateConfig(ctx, cs, pluginTemplate)
+	if err != nil {
+		return &api.PluginError{Err: err, Step: api.PluginStepRegenerateClusterSecrets}
 	}
 	err = p.clusterUpgrader.CreateClients(ctx, cs)
 	if err != nil {
