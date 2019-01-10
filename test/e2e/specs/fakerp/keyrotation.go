@@ -40,22 +40,20 @@ var _ = Describe("Key Rotation E2E tests [KeyRotation][Fake][LongRunning]", func
 		Expect(err).NotTo(HaveOccurred())
 		Expect(after).NotTo(BeNil())
 
-		By("Verifying that the config blob before and after key rotation does contain matching ca certificates")
+		By("Verifying that ca certificates have not been updated")
 		Expect(reflect.DeepEqual(before.Config.Certificates.ServiceSigningCa.Cert, after.Config.Certificates.ServiceSigningCa.Cert)).To(BeTrue())
 		Expect(reflect.DeepEqual(before.Config.Certificates.ServiceCatalogCa.Cert, after.Config.Certificates.ServiceCatalogCa.Cert)).To(BeTrue())
 		Expect(reflect.DeepEqual(before.Config.Certificates.FrontProxyCa.Cert, after.Config.Certificates.FrontProxyCa.Cert)).To(BeTrue())
 		Expect(reflect.DeepEqual(before.Config.Certificates.EtcdCa.Cert, after.Config.Certificates.EtcdCa.Cert)).To(BeTrue())
 		Expect(reflect.DeepEqual(before.Config.Certificates.Ca.Cert, after.Config.Certificates.Ca.Cert)).To(BeTrue())
 
-		By("Verifying that the config blob before and after key rotation does not contain matching public certificates")
+		By("Verifying that certain non-ca public certificates have been updated")
 		Expect(reflect.DeepEqual(before.Config.Certificates.Admin.Cert, after.Config.Certificates.Admin.Cert)).To(BeFalse())
 		Expect(reflect.DeepEqual(before.Config.Certificates.AggregatorFrontProxy.Cert, after.Config.Certificates.AggregatorFrontProxy.Cert)).To(BeFalse())
 		Expect(reflect.DeepEqual(before.Config.Certificates.AzureClusterReader.Cert, after.Config.Certificates.AzureClusterReader.Cert)).To(BeFalse())
 		Expect(reflect.DeepEqual(before.Config.Certificates.EtcdClient.Cert, after.Config.Certificates.EtcdClient.Cert)).To(BeFalse())
 		Expect(reflect.DeepEqual(before.Config.Certificates.EtcdPeer.Cert, after.Config.Certificates.EtcdPeer.Cert)).To(BeFalse())
 		Expect(reflect.DeepEqual(before.Config.Certificates.EtcdServer.Cert, after.Config.Certificates.EtcdServer.Cert)).To(BeFalse())
-		Expect(reflect.DeepEqual(before.Config.Certificates.GenevaLogging.Cert, after.Config.Certificates.GenevaLogging.Cert)).To(BeFalse())
-		Expect(reflect.DeepEqual(before.Config.Certificates.GenevaMetrics.Cert, after.Config.Certificates.GenevaMetrics.Cert)).To(BeFalse())
 		Expect(reflect.DeepEqual(before.Config.Certificates.MasterKubeletClient.Cert, after.Config.Certificates.MasterKubeletClient.Cert)).To(BeFalse())
 		Expect(reflect.DeepEqual(before.Config.Certificates.MasterProxyClient.Cert, after.Config.Certificates.MasterProxyClient.Cert)).To(BeFalse())
 		Expect(reflect.DeepEqual(before.Config.Certificates.MasterServer.Cert, after.Config.Certificates.MasterServer.Cert)).To(BeFalse())
@@ -67,9 +65,9 @@ var _ = Describe("Key Rotation E2E tests [KeyRotation][Fake][LongRunning]", func
 		Expect(reflect.DeepEqual(before.Config.Certificates.ServiceCatalogAPIClient.Cert, after.Config.Certificates.ServiceCatalogAPIClient.Cert)).To(BeFalse())
 		Expect(reflect.DeepEqual(before.Config.Certificates.ServiceCatalogServer.Cert, after.Config.Certificates.ServiceCatalogServer.Cert)).To(BeFalse())
 
-		By("Verifying that the certificates have been updated")
-		before.Config.Certificates = after.Config.Certificates
-		configMatch := reflect.DeepEqual(before.Config, after.Config)
-		Expect(configMatch).To(BeFalse())
+		// TODO: work towards moving the certs below to the updated section above
+		By("Verifying that certain non-ca public certificates have not been updated")
+		Expect(reflect.DeepEqual(before.Config.Certificates.GenevaLogging.Cert, after.Config.Certificates.GenevaLogging.Cert)).To(BeTrue())
+		Expect(reflect.DeepEqual(before.Config.Certificates.GenevaMetrics.Cert, after.Config.Certificates.GenevaMetrics.Cert)).To(BeTrue())
 	})
 })
