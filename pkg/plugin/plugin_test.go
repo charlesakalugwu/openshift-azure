@@ -284,3 +284,24 @@ func TestRotateClusterSecrets(t *testing.T) {
 		t.Errorf("plugin.RotateClusterSecrets error = %v", err)
 	}
 }
+
+func TestClusterStatus(t *testing.T) {
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	mockGen := mock_config.NewMockGenerator(mockCtrl)
+	mockUp := mock_cluster.NewMockUpgrader(mockCtrl)
+	mockArm := mock_arm.NewMockGenerator(mockCtrl)
+
+	p := &plugin{
+		armGenerator:    mockArm,
+		clusterUpgrader: mockUp,
+		configGenerator: mockGen,
+		log:             logrus.NewEntry(logrus.StandardLogger()),
+	}
+
+	_, err := p.ClusterStatus(nil, nil)
+	if err != nil {
+		t.Errorf("plugin.ClusterStatus error = %v", err)
+	}
+}

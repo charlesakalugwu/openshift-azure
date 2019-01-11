@@ -90,6 +90,72 @@ func NewOpenShiftManagedClustersClientWithBaseURI(baseURI string, subscriptionID
 	return OpenShiftManagedClustersClient{NewWithBaseURI(baseURI, subscriptionID)}
 }
 
+// ClusterStatus gets the details of the managed openshift cluster with a specified resource group and name.
+// Parameters:
+// resourceGroupName - the name of the resource group.
+// resourceName - the name of the openshift managed cluster resource.
+func (client OpenShiftManagedClustersClient) ClusterStatus(ctx context.Context, resourceGroupName string, resourceName string) (result OpenShiftManagedClustersControlPlaneStatus, err error) {
+	req, err := client.ClusterStatusPreparer(ctx, resourceGroupName, resourceName)
+	if err != nil {
+		err = autorest.NewErrorWithError(err, "containerservice.OpenShiftManagedClustersClient", "ClusterStatus", nil, "Failure preparing request")
+		return
+	}
+
+	resp, err := client.ClusterStatusSender(req)
+	if err != nil {
+		result.Response = autorest.Response{Response: resp}
+		err = autorest.NewErrorWithError(err, "containerservice.OpenShiftManagedClustersClient", "ClusterStatus", resp, "Failure sending request")
+		return
+	}
+
+	result, err = client.ClusterStatusResponder(resp)
+	if err != nil {
+		err = autorest.NewErrorWithError(err, "containerservice.OpenShiftManagedClustersClient", "ClusterStatus", resp, "Failure responding to request")
+	}
+
+	return
+}
+
+// ClusterStatusPreparer prepares the ClusterStatus request.
+func (client OpenShiftManagedClustersClient) ClusterStatusPreparer(ctx context.Context, resourceGroupName string, resourceName string) (*http.Request, error) {
+	pathParameters := map[string]interface{}{
+		"resourceGroupName": autorest.Encode("path", resourceGroupName),
+		"resourceName":      autorest.Encode("path", resourceName),
+		"subscriptionId":    autorest.Encode("path", client.SubscriptionID),
+	}
+
+	queryParameters := map[string]interface{}{
+		"api-version": APIVersion,
+	}
+
+	preparer := autorest.CreatePreparer(
+		autorest.AsGet(),
+		autorest.WithBaseURL(client.BaseURI),
+		autorest.WithPathParameters("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerService/openShiftManagedClusters/{resourceName}/status", pathParameters),
+		autorest.WithQueryParameters(queryParameters))
+	return preparer.Prepare((&http.Request{}).WithContext(ctx))
+}
+
+// ClusterStatusSender sends the ClusterStatus request. The method will close the
+// http.Response Body if it receives an error.
+func (client OpenShiftManagedClustersClient) ClusterStatusSender(req *http.Request) (*http.Response, error) {
+	return autorest.SendWithSender(client, req,
+		azure.DoRetryWithRegistration(client.Client))
+}
+
+// ClusterStatusResponder handles the response to the ClusterStatus request. The method always
+// closes the http.Response Body.
+func (client OpenShiftManagedClustersClient) ClusterStatusResponder(resp *http.Response) (result OpenShiftManagedClustersControlPlaneStatus, err error) {
+	err = autorest.Respond(
+		resp,
+		client.ByInspecting(),
+		azure.WithErrorUnlessStatusCode(http.StatusOK),
+		autorest.ByUnmarshallingJSON(&result),
+		autorest.ByClosing())
+	result.Response = autorest.Response{Response: resp}
+	return
+}
+
 // CreateOrUpdateAndWait creates or updates a openshift managed cluster and waits for the
 // request to complete before returning.
 func (client OpenShiftManagedClustersClient) CreateOrUpdateAndWait(ctx context.Context, resourceGroupName, resourceName string, parameters OpenShiftManagedCluster) (osmc OpenShiftManagedCluster, err error) {
@@ -665,4 +731,34 @@ func (future *OpenShiftManagedClustersRotateSecretsFuture) Result(client OpenShi
 	}
 	ar.Response = future.Response()
 	return
+}
+
+// OpenShiftManagedClustersClusterStatusFuture an abstraction for monitoring and retrieving the results of a
+// cluster status operation.
+type OpenShiftManagedClustersClusterStatusFuture struct {
+	azure.Future
+}
+
+// Result returns the result of the asynchronous operation.
+// If the operation has not completed it will return an error.
+func (future *OpenShiftManagedClustersClusterStatusFuture) Result(client OpenShiftManagedClustersClient) (ar autorest.Response, err error) {
+	var done bool
+	done, err = future.Done(client)
+	if err != nil {
+		err = autorest.NewErrorWithError(err, "containerservice.OpenShiftManagedClustersClusterStatusFuture", "Result", future.Response(), "Polling failure")
+		return
+	}
+	if !done {
+		err = azure.NewAsyncOpIncompleteError("containerservice.OpenShiftManagedClustersClusterStatusFuture")
+		return
+	}
+	ar.Response = future.Response()
+	return
+}
+
+// OpenShiftManagedClustersControlPlaneStatus contains the status of the control plane pods
+type OpenShiftManagedClustersControlPlaneStatus struct {
+	autorest.Response `json:"-"`
+
+	Status []byte `json:"status,omitempty"`
 }

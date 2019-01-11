@@ -3,10 +3,12 @@ package plugin
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/sirupsen/logrus"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/openshift/openshift-azure/pkg/api"
 	pluginapi "github.com/openshift/openshift-azure/pkg/api/plugin/api"
@@ -14,6 +16,7 @@ import (
 	"github.com/openshift/openshift-azure/pkg/cluster"
 	"github.com/openshift/openshift-azure/pkg/config"
 	"github.com/openshift/openshift-azure/pkg/util/resourceid"
+	"github.com/openshift/openshift-azure/test/clients/openshift"
 )
 
 type plugin struct {
@@ -172,4 +175,27 @@ func (p *plugin) RotateClusterSecrets(ctx context.Context, cs *api.OpenShiftMana
 		return err
 	}
 	return nil
+}
+
+func (p *plugin) ClusterStatus(ctx context.Context, cs *api.OpenShiftManagedCluster) ([]byte, error) {
+	cli, err := openshift.NewAdminClient()
+	if err != nil {
+		return nil, err
+	}
+
+	p.log.Info("fetching status of control plane pods")
+	statuses := make(map[string][]string)
+	for _, namespace := range []string{"kube-system", "kube-service-catalog", "openshift-etcd"} {
+		var current []string
+		list, err := cli.CoreV1.Pods(namespace).List(metav1.ListOptions{})
+		if err != nil {
+			return nil, err
+		}
+		for _, pod := range list.Items {
+			current = append(current, pod.Name)
+		}
+		statuses[namespace] = current
+	}
+
+	return json.Marshal(statuses)
 }

@@ -9,15 +9,14 @@ import (
 	"github.com/openshift/openshift-azure/pkg/plugin"
 )
 
-// handleRotateSecrets handles admin requests for the rotation of cluster secrets
-func (s *Server) handleRotateSecrets(w http.ResponseWriter, req *http.Request) {
+// handleClusterStatus handles admin requests for the status of control plane pods
+func (s *Server) handleClusterStatus(w http.ResponseWriter, req *http.Request) {
 	cs := s.read()
 	if cs == nil {
 		s.internalError(w, "Failed to read the internal config")
 		return
 	}
 
-	ctx := context.Background()
 	config, err := GetPluginConfig()
 	if err != nil {
 		s.internalError(w, fmt.Sprintf("Failed to configure plugin: %v", err))
@@ -28,21 +27,18 @@ func (s *Server) handleRotateSecrets(w http.ResponseWriter, req *http.Request) {
 		s.internalError(w, fmt.Sprintf("Failed to configure plugin: %v", err))
 		return
 	}
-	pluginTemplate, err := GetPluginTemplate()
-	if err != nil {
-		s.internalError(w, fmt.Sprintf("Failed to configure plugin template: %v", err))
-		return
-	}
 
+	ctx := context.Background()
 	ctx = context.WithValue(ctx, api.ContextKeyClientID, cs.Properties.ServicePrincipalProfile.ClientID)
 	ctx = context.WithValue(ctx, api.ContextKeyClientSecret, cs.Properties.ServicePrincipalProfile.Secret)
 	ctx = context.WithValue(ctx, api.ContextKeyTenantID, cs.Properties.AzProfile.TenantID)
 
-	deployer := GetDeployer(s.log, cs, config)
-	if err := p.RotateClusterSecrets(ctx, cs, deployer, pluginTemplate); err != nil {
-		s.internalError(w, fmt.Sprintf("Failed to rotate cluster secrets: %v", err))
+	status, err := p.ClusterStatus(ctx, cs)
+	if err != nil {
+		s.internalError(w, fmt.Sprintf("Failed to fetch cluster status: %v", err))
 		return
 	}
 
-	s.log.Info("rotated cluster secrets")
+	w.Write(status)
+	s.log.Info("fetched cluster status")
 }

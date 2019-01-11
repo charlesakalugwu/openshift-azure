@@ -116,4 +116,7 @@ type Plugin interface {
 
 	// RotateClusterSecrets rotates the secrets in a cluster's config blob and then updates the cluster
 	RotateClusterSecrets(ctx context.Context, cs *OpenShiftManagedCluster, deployer DeployFn, template *plugin.Config) *PluginError
+
+	// ClusterStatus fetches a consolidated list of statuses of control plane pods in the cluster
+	ClusterStatus(ctx context.Context, cs *OpenShiftManagedCluster) ([]byte, error)
 }

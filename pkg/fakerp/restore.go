@@ -49,11 +49,6 @@ func (s *Server) validateRestore(w http.ResponseWriter, r *http.Request) bool {
 }
 
 func (s *Server) restore(w http.ResponseWriter, req *http.Request) {
-	defer func() {
-		// drain once we are done processing this request
-		<-s.inProgress
-	}()
-
 	cs := s.read()
 	if cs == nil {
 		s.internalError(w, "Failed to read the internal config")

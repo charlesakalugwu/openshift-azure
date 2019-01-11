@@ -78,11 +78,17 @@ func (s *Server) Run() {
 	s.router.Delete(filepath.Join("/admin", s.basePath), s.handleDelete)
 	s.router.Get(filepath.Join("/admin", s.basePath), s.handleGet)
 	s.router.Put(filepath.Join("/admin", s.basePath), s.handlePut)
-	s.router.Put(filepath.Join("/admin", s.basePath, "restore"), s.handleRestore)
+	s.router.Put(filepath.Join("/admin", s.basePath, "/restore"), s.handleRestore)
 	s.router.Put(filepath.Join("/admin", s.basePath, "/rotate/secrets"), s.handleRotateSecrets)
+	s.router.Get(filepath.Join("/admin", s.basePath, "/status"), s.handleClusterStatus)
+	s.router.Delete("/foo", s.handleFoo)
 
 	s.log.Infof("starting server on %s", s.address)
 	s.log.WithError(http.ListenAndServe(s.address, s.router)).Warn("Server exited.")
+}
+
+func (s *Server) handleFoo(w http.ResponseWriter, req *http.Request) {
+
 }
 
 // The way we run the fake RP during development cannot really
@@ -213,11 +219,6 @@ func (s *Server) handleGet(w http.ResponseWriter, req *http.Request) {
 }
 
 func (s *Server) handlePut(w http.ResponseWriter, req *http.Request) {
-	defer func() {
-		// drain once we are done processing this request
-		<-s.inProgress
-	}()
-
 	// read old config if it exists
 	var oldCs *internalapi.OpenShiftManagedCluster
 	var err error

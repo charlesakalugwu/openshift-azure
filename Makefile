@@ -116,4 +116,7 @@ e2e-scaleupdown:
 e2e-vnet:
 	FOCUS="\[Vnet\]\[Real\]" TIMEOUT=70m ./hack/e2e.sh
 
+e2e-clusterstatus:
+	FOCUS="\[ClusterStatus\]\[Fake\]" TIMEOUT=5m ./hack/e2e.sh
+
 .PHONY: clean sync-image sync-push verify unit e2e
