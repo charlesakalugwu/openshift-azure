@@ -1,5 +1,5 @@
-hash: d0fb924f51ed51ddf9e063ad34f937c9f21ba9f55103d4ac4c9b7903aa0742d0
-updated: 2019-01-08T20:45:30.318702029-06:00
+hash: 0cc136f0d0b01e7d58fd4e5b8ee5b01f6cd666441149d05ebde656abcb668de9
+updated: 2019-01-14T14:51:09.983984021+01:00
 imports:
 - name: github.com/Azure/azure-sdk-for-go
   version: d3bcaa706ac10b18784811ff31e43be635159013
@@ -127,7 +127,7 @@ imports:
 - name: github.com/modern-go/reflect2
   version: 05fbef0ca5da472bbf96c9322b84a53edc03c9fd
 - name: github.com/onsi/ginkgo
-  version: 3774a09d95489ccaa16032e0770d08ea77ba6184
+  version: 2e1be8f7d90e9d3e3e58b0ce470f2f14d075406f
   subpackages:
   - config
   - internal/codelocation
