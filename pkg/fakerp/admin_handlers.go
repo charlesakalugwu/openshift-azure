@@ -7,6 +7,7 @@ import (
 
 	"github.com/Azure/azure-sdk-for-go/storage"
 
+	internalapi "github.com/openshift/openshift-azure/pkg/api"
 	"github.com/openshift/openshift-azure/pkg/cluster"
 	"github.com/openshift/openshift-azure/pkg/util/cloudprovider"
 	"github.com/openshift/openshift-azure/pkg/util/configblob"
@@ -92,12 +93,15 @@ func (s *Server) handleRestore(w http.ResponseWriter, req *http.Request) {
 		s.internalError(w, fmt.Sprintf("Failed to enrich context: %v", err))
 		return
 	}
+	s.writeState(internalapi.AdminUpdating)
 	deployer := GetDeployer(s.log, cs, s.pluginConfig)
 	if err := s.plugin.RecoverEtcdCluster(ctx, cs, deployer, blobName); err != nil {
+		s.writeState(internalapi.Failed)
 		s.internalError(w, fmt.Sprintf("Failed to recover cluster: %v", err))
 		return
 	}
 
+	s.writeState(internalapi.Succeeded)
 	s.log.Info("recovered cluster")
 }
 
@@ -114,9 +118,12 @@ func (s *Server) handleRotateSecrets(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	deployer := GetDeployer(s.log, cs, s.pluginConfig)
+	s.writeState(internalapi.AdminUpdating)
 	if err := s.plugin.RotateClusterSecrets(ctx, cs, deployer, s.pluginTemplate); err != nil {
+		s.writeState(internalapi.Failed)
 		s.internalError(w, fmt.Sprintf("Failed to rotate cluster secrets: %v", err))
 		return
 	}
+	s.writeState(internalapi.Succeeded)
 	s.log.Info("rotated cluster secrets")
 }
