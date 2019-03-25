@@ -67,37 +67,57 @@ func GetPluginTemplate() (*pluginapi.Config, error) {
 	return template, nil
 }
 
-func overridePluginTemplate(template *pluginapi.Config) {
-	if os.Getenv("SYNC_IMAGE") != "" {
-		template.Images.Sync = os.Getenv("SYNC_IMAGE")
+func overridePluginTemplate(template *pluginapi.Config) error {
+	// read plugin template override
+	data, err := ioutil.ReadFile("pluginconfig/override.yaml")
+	if err != nil {
+		return err
 	}
-	if os.Getenv("METRICSBRIDGE_IMAGE") != "" {
-		template.Images.MetricsBridge = os.Getenv("METRICSBRIDGE_IMAGE")
+	var override *pluginapi.Config
+	if err := yaml.Unmarshal(data, &override); err != nil {
+		return err
 	}
-	if os.Getenv("ETCDBACKUP_IMAGE") != "" {
-		template.Images.EtcdBackup = os.Getenv("ETCDBACKUP_IMAGE")
+
+	if override.Images.Sync != "" {
+		template.Images.Sync = override.Images.Sync
 	}
-	if os.Getenv("TLSPROXY_IMAGE") != "" {
-		template.Images.TLSProxy = os.Getenv("TLSPROXY_IMAGE")
+	if override.Images.MetricsBridge != "" {
+		template.Images.MetricsBridge = override.Images.MetricsBridge
 	}
-	if os.Getenv("CANARY_IMAGE") != "" {
-		template.Images.Canary = os.Getenv("CANARY_IMAGE")
+	if override.Images.EtcdBackup != "" {
+		template.Images.EtcdBackup = override.Images.EtcdBackup
 	}
-	if os.Getenv("AZURE_CONTROLLERS_IMAGE") != "" {
-		template.Images.AzureControllers = os.Getenv("AZURE_CONTROLLERS_IMAGE")
+	if override.Images.TLSProxy != "" {
+		template.Images.TLSProxy = override.Images.TLSProxy
 	}
-	if os.Getenv("STARTUP_IMAGE") != "" {
-		template.Images.Startup = os.Getenv("STARTUP_IMAGE")
+	if override.Images.Canary != "" {
+		template.Images.Canary = override.Images.Canary
 	}
-	if os.Getenv("OREG_URL") != "" {
-		template.Images.Format = os.Getenv("OREG_URL")
+	if override.Images.AzureControllers != "" {
+		template.Images.AzureControllers = override.Images.AzureControllers
 	}
-	if os.Getenv("IMAGE_VERSION") != "" {
-		template.ImageVersion = os.Getenv("IMAGE_VERSION")
+	if override.Images.Startup != "" {
+		template.Images.Startup = override.Images.Startup
 	}
-	if os.Getenv("IMAGE_OFFER") != "" {
-		template.ImageOffer = os.Getenv("IMAGE_OFFER")
+	if override.Images.Format != "" {
+		template.Images.Format = override.Images.Format
 	}
+	if override.ImageVersion != "" {
+		template.ImageVersion = override.ImageVersion
+	}
+	if override.ImageOffer != "" {
+		template.ImageOffer = override.ImageOffer
+	}
+	if override.ComponentLogLevel.APIServer >= 0 {
+		template.ComponentLogLevel.APIServer = override.ComponentLogLevel.APIServer
+	}
+	if override.ComponentLogLevel.ControllerManager >= 0 {
+		template.ComponentLogLevel.ControllerManager = override.ComponentLogLevel.ControllerManager
+	}
+	if override.ComponentLogLevel.Node >= 0 {
+		template.ComponentLogLevel.Node = override.ComponentLogLevel.Node
+	}
+	return nil
 }
 
 func readCert(path string) (*x509.Certificate, error) {
