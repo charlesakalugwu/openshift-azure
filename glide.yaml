@@ -1,9 +1,9 @@
 package: github.com/openshift/openshift-azure
 import:
 - package: github.com/openshift/api
-  version: release-3.10
+  version: release-3.11
 - package: github.com/openshift/client-go
-  version: release-3.10
+  version: release-3.11
 - package: k8s.io/api
   version: kubernetes-1.10.6
 - package: k8s.io/client-go
@@ -75,7 +75,7 @@ import:
 - package: github.com/beorn7/perks
   subpackages:
   - quantile
-- package: github.com/Microsoft/ApplicationInsights-Go
+- package: github.com/microsoft/ApplicationInsights-Go
   subpackages:
   - appinsights
 - package: github.com/grpc-ecosystem/grpc-gateway
