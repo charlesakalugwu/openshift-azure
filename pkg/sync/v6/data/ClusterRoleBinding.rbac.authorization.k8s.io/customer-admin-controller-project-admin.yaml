@@ -8,5 +8,5 @@ roleRef:
   name: customer-admin-project
 subjects:
 - kind: ServiceAccount
-  name: customer-admin-controller
+  name: azure-controllers
   namespace: openshift-infra

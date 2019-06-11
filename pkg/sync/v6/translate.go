@@ -428,7 +428,7 @@ var translations = map[string][]struct {
 			Template: "{{ .Config.Images.Httpd }}",
 		},
 	},
-	"Deployment.apps/openshift-infra/customer-admin-controller": {
+	"Deployment.apps/openshift-infra/azure-controllers": {
 		{
 			Path:     jsonpath.MustCompile("$.spec.template.spec.containers[0].image"),
 			Template: "{{ .Config.Images.AzureControllers }}",

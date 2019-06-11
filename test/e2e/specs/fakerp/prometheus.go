@@ -33,7 +33,7 @@ type targetsResponse struct {
 	} `json:"data"`
 }
 
-var _ = Describe("Prometheus E2E tests [Fake]", func() {
+var _ = Describe("Prometheus E2E tests [Prometheus][Fake]", func() {
 	It("should register all the necessary prometheus targets", func() {
 		token, err := sanity.Checker.Client.Admin.GetServiceAccountToken("openshift-monitoring", "prometheus-k8s")
 		Expect(err).NotTo(HaveOccurred())
@@ -91,6 +91,8 @@ var _ = Describe("Prometheus E2E tests [Fake]", func() {
 			"node-exporter":               nodes,
 			"prometheus-k8s":              2,
 			"prometheus-operator":         1,
+			"sync":                        1,
+			"azure-controllers":           1,
 		}))
 	})
 })

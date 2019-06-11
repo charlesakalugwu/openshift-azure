@@ -57,7 +57,7 @@ func (u *Kubeclientset) EnsureSyncPod(ctx context.Context, syncImage string, has
 				Replicas: to.Int32Ptr(1),
 				Selector: &metav1.LabelSelector{
 					MatchLabels: map[string]string{
-						"app": "sync",
+						"k8s-app": "sync",
 					},
 				},
 				Template: corev1.PodTemplateSpec{
@@ -66,7 +66,7 @@ func (u *Kubeclientset) EnsureSyncPod(ctx context.Context, syncImage string, has
 							"checksum": hex.EncodeToString(hash),
 						},
 						Labels: map[string]string{
-							"app": "sync",
+							"k8s-app": "sync",
 						},
 					},
 					Spec: corev1.PodSpec{
@@ -144,17 +144,18 @@ func (u *Kubeclientset) EnsureSyncPod(ctx context.Context, syncImage string, has
 				Name:      "sync",
 				Namespace: "kube-system",
 				Labels: map[string]string{
-					"app": "sync",
+					"k8s-app": "sync",
 				},
 			},
 			Spec: corev1.ServiceSpec{
 				Ports: []corev1.ServicePort{
 					{
+						Name: "http",
 						Port: 8080,
 					},
 				},
 				Selector: map[string]string{
-					"app": "sync",
+					"k8s-app": "sync",
 				},
 				PublishNotReadyAddresses: true,
 			},
