@@ -10,6 +10,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/prometheus/client_golang/prometheus"
 	"net/http"
 	"sort"
 	"sync/atomic"
@@ -380,27 +381,50 @@ func (s *sync) writeDB() error {
 
 // Main loop
 func (s *sync) Sync(ctx context.Context) error {
+	startTime := time.Now()
+	defer s.metrics.syncDurationSummary.Observe(time.Now().Sub(startTime).Seconds())
+
+	s.metrics.syncInfoGauge.With(prometheus.Labels{
+		"plugin_version": s.cs.Config.PluginVersion,
+		"image":          s.cs.Config.Images.Sync,
+		"period_seconds": "180",
+	}).Set(1)
+
+	s.metrics.syncInFlightGauge.Inc()
+	defer s.metrics.syncInFlightGauge.Dec()
+
 	transport, err := rest.TransportFor(s.restconfig)
 	if err != nil {
+		s.metrics.syncErrorsCounter.Inc()
 		return err
 	}
 
 	_, err = utilwait.ForHTTPStatusOk(ctx, s.log, &http.Client{Transport: transport, Timeout: 10 * time.Second}, s.restconfig.Host+"/healthz", time.Second)
 	if err != nil {
+		s.metrics.syncErrorsCounter.Inc()
 		return err
 	}
 
 	err = s.updateDynamicClient()
 	if err != nil {
+		s.metrics.syncErrorsCounter.Inc()
 		return err
 	}
 
 	err = s.writeDB()
 	if err != nil {
+		s.metrics.syncErrorsCounter.Inc()
 		return err
 	}
 
-	return s.deleteOrphans()
+	err = s.deleteOrphans()
+	if err != nil {
+		s.metrics.syncErrorsCounter.Inc()
+		return err
+	}
+	s.metrics.syncLastExecutedGauge.SetToCurrentTime()
+
+	return nil
 }
 
 func (s *sync) ReadyHandler(w http.ResponseWriter, r *http.Request) {
@@ -470,6 +494,7 @@ type sync struct {
 	cli        *discovery.DiscoveryClient
 	dyn        dynamic.ClientPool
 	grs        []*discovery.APIGroupResources
+	metrics    *metrics
 }
 
 func New(log *logrus.Entry, cs *api.OpenShiftManagedCluster, initClients bool) (*sync, error) {
@@ -477,9 +502,8 @@ func New(log *logrus.Entry, cs *api.OpenShiftManagedCluster, initClients bool) (
 		log: log,
 		cs:  cs,
 	}
-
+	var err error
 	if initClients {
-		var err error
 		s.restconfig, err = managedcluster.RestConfigFromV1Config(cs.Config.AdminKubeconfig)
 		if err != nil {
 			return nil, err
@@ -507,9 +531,16 @@ func New(log *logrus.Entry, cs *api.OpenShiftManagedCluster, initClients bool) (
 		}
 	}
 
+	if s.metrics == nil {
+		s.metrics, err = initMetrics()
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	s.ready.Store(false)
 
-	err := s.readDB()
+	err = s.readDB()
 	if err != nil {
 		return nil, err
 	}
