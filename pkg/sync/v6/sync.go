@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/ghodss/yaml"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 	kapiextensions "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
@@ -32,6 +33,7 @@ import (
 	kaggregator "k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset"
 
 	"github.com/openshift/openshift-azure/pkg/api"
+	"github.com/openshift/openshift-azure/pkg/metrics"
 	"github.com/openshift/openshift-azure/pkg/util/healthcheck"
 	"github.com/openshift/openshift-azure/pkg/util/jsonpath"
 	"github.com/openshift/openshift-azure/pkg/util/managedcluster"
@@ -390,27 +392,50 @@ func (s *sync) writeDB() error {
 
 // Main loop
 func (s *sync) Sync(ctx context.Context) error {
+	startTime := time.Now()
+	defer s.metrics.SyncDurationSummary.Observe(time.Now().Sub(startTime).Seconds())
+
+	s.metrics.SyncInfoGauge.With(prometheus.Labels{
+		"plugin_version": s.cs.Config.PluginVersion,
+		"image":          s.cs.Config.Images.Sync,
+		"period_seconds": "180",
+	}).Set(1)
+
+	s.metrics.SyncInFlightGauge.Inc()
+	defer s.metrics.SyncInFlightGauge.Dec()
+
 	transport, err := rest.TransportFor(s.restconfig)
 	if err != nil {
+		s.metrics.SyncErrorsCounter.Inc()
 		return err
 	}
 
 	_, err = utilwait.ForHTTPStatusOk(ctx, s.log, &http.Client{Transport: transport, Timeout: 10 * time.Second}, s.restconfig.Host+"/healthz", time.Second)
 	if err != nil {
+		s.metrics.SyncErrorsCounter.Inc()
 		return err
 	}
 
 	err = s.updateDynamicClient()
 	if err != nil {
+		s.metrics.SyncErrorsCounter.Inc()
 		return err
 	}
 
 	err = s.writeDB()
 	if err != nil {
+		s.metrics.SyncErrorsCounter.Inc()
 		return err
 	}
 
-	return s.deleteOrphans()
+	err = s.deleteOrphans()
+	if err != nil {
+		s.metrics.SyncErrorsCounter.Inc()
+		return err
+	}
+	s.metrics.SyncLastExecutedGauge.SetToCurrentTime()
+
+	return nil
 }
 
 func (s *sync) ReadyHandler(w http.ResponseWriter, r *http.Request) {
@@ -481,12 +506,14 @@ type sync struct {
 	cli        *discovery.DiscoveryClient
 	dyn        dynamic.ClientPool
 	grs        []*discovery.APIGroupResources
+	metrics    *metrics.Collector
 }
 
-func New(log *logrus.Entry, cs *api.OpenShiftManagedCluster, initClients bool) (*sync, error) {
+func New(log *logrus.Entry, cs *api.OpenShiftManagedCluster, initClients bool, metrics *metrics.Collector) (*sync, error) {
 	s := &sync{
-		log: log,
-		cs:  cs,
+		log:     log,
+		cs:      cs,
+		metrics: metrics,
 	}
 
 	if initClients {

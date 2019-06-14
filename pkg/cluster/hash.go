@@ -16,6 +16,7 @@ import (
 
 	"github.com/openshift/openshift-azure/pkg/api"
 	"github.com/openshift/openshift-azure/pkg/arm"
+	"github.com/openshift/openshift-azure/pkg/metrics"
 	"github.com/openshift/openshift-azure/pkg/startup"
 	"github.com/openshift/openshift-azure/pkg/sync"
 )
@@ -111,7 +112,7 @@ func (h *Hash) HashScaleSet(cs *api.OpenShiftManagedCluster, app *api.AgentPoolP
 
 // HashSyncPod returns the hash of the sync pod output
 func (h *Hash) HashSyncPod(cs *api.OpenShiftManagedCluster) ([]byte, error) {
-	s, err := sync.New(h.Log, cs, false)
+	s, err := sync.New(h.Log, cs, false, metrics.DefaultCollector())
 	if err != nil {
 		return nil, err
 	}

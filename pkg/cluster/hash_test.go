@@ -11,6 +11,7 @@ import (
 	"github.com/openshift/openshift-azure/pkg/api"
 	pluginapi "github.com/openshift/openshift-azure/pkg/api/plugin"
 	"github.com/openshift/openshift-azure/pkg/arm"
+	"github.com/openshift/openshift-azure/pkg/metrics"
 	"github.com/openshift/openshift-azure/pkg/startup"
 	"github.com/openshift/openshift-azure/pkg/sync"
 	"github.com/openshift/openshift-azure/test/util/populate"
@@ -254,7 +255,7 @@ func TestHashSyncPodStability(t *testing.T) {
 	for version, tt := range tests {
 		cs.Config.PluginVersion = version
 
-		s, err := sync.New(nil, cs, false)
+		s, err := sync.New(nil, cs, false, metrics.DefaultCollector())
 		if err != nil {
 			t.Fatal(err)
 		}

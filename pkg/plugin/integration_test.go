@@ -36,6 +36,7 @@ import (
 	"github.com/openshift/openshift-azure/pkg/cluster/scaler"
 	"github.com/openshift/openshift-azure/pkg/cluster/updateblob"
 	"github.com/openshift/openshift-azure/pkg/config"
+	"github.com/openshift/openshift-azure/pkg/metrics"
 	"github.com/openshift/openshift-azure/pkg/startup"
 	"github.com/openshift/openshift-azure/pkg/sync"
 	fakecloud "github.com/openshift/openshift-azure/pkg/util/azureclient/fake"
@@ -387,7 +388,7 @@ func getHashes(az *fakecloud.AzureCloud, cs *api.OpenShiftManagedCluster) (*upda
 	// get sync deployment checksum annotation
 	// FIXME: only doing it this way as fake kube Get on the deployment
 	// always returns an empty string on the annotation
-	syncer, err := sync.New(az.ComputeRP.Log, cs, false)
+	syncer, err := sync.New(az.ComputeRP.Log, cs, false, metrics.DefaultCollector())
 	if err != nil {
 		return nil, "", err
 	}
