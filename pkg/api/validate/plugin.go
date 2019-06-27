@@ -3,6 +3,7 @@ package validate
 import (
 	"fmt"
 	"net"
+	"strings"
 
 	pluginapi "github.com/openshift/openshift-azure/pkg/api/plugin"
 )
@@ -24,6 +25,10 @@ func (v *PluginAPIValidator) Validate(c *pluginapi.Config) (errs []error) {
 
 	if !rxPluginVersion.MatchString(c.PluginVersion) {
 		errs = append(errs, fmt.Errorf("invalid pluginVersion %q", c.PluginVersion))
+	}
+
+	for _, rpmPackage := range c.SecurityPatchPackages {
+		errs = append(errs, validateSecurityPatchPackage(rpmPackage)...)
 	}
 
 	errs = append(errs, validateComponentLogLevel(&c.ComponentLogLevel)...)
@@ -85,6 +90,17 @@ func (v *PluginAPIValidator) Validate(c *pluginapi.Config) (errs []error) {
 
 	if len(c.ImagePullSecret) == 0 {
 		errs = append(errs, fmt.Errorf("invalid imagePullSecret %q", c.ImagePullSecret))
+	}
+
+	return
+}
+
+func validateSecurityPatchPackage(name string) (errs []error) {
+	if strings.HasSuffix(name, ".rpm") {
+		errs = append(errs, fmt.Errorf("invalid securityUpdatePackage %q", name))
+	}
+	if !rxRpmPackage.MatchString(name) {
+		errs = append(errs, fmt.Errorf("invalid securityUpdatePackage %q", name))
 	}
 
 	return

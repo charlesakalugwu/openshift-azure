@@ -12,6 +12,8 @@ func TestPluginTemplateValidate(t *testing.T) {
 	expectedErrs :=
 		[]error{
 			errors.New(`invalid pluginVersion ""`),
+			errors.New(`invalid securityUpdatePackage "patchtwo.rpm"`),
+			errors.New(`invalid securityUpdatePackage ""`),
 			errors.New(`invalid versions[""]`),
 			errors.New(`invalid versions[""].imageOffer ""`),
 			errors.New(`invalid versions[""].imagePublisher ""`),
@@ -71,6 +73,7 @@ func TestPluginTemplateValidate(t *testing.T) {
 		Versions: map[string]pluginapi.VersionConfig{
 			"": {},
 		},
+		SecurityPatchPackages: []string{"Patch_1-+.", "patchtwo.rpm", ""},
 	}
 	v := PluginAPIValidator{}
 	errs := v.Validate(&template)

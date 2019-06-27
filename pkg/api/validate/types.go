@@ -43,6 +43,9 @@ var (
 	// This regexp is to check plugin version format
 	rxPluginVersion = regexp.MustCompile(`^v\d+\.\d+$`)
 
+	// This regexp checks rpm package name format
+	rxRpmPackage = regexp.MustCompile(`^[a-zA-Z0-9_\-\.+]+$`)
+
 	rxResourceGroupName = regexp.MustCompile(`^[-\w._()]{1,90}$`)
 
 	rxKeyVaultSecretURL = regexp.MustCompile(`^https://[-a-zA-Z0-9]{3,24}\.vault\.azure\.net/secrets/[-a-zA-Z0-9]{1,127}$`)
