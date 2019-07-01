@@ -7,6 +7,62 @@
 # iptables -I INPUT -s $(dig +short "$OS_FQDN" | tail -1) -j LOG --log-prefix "KUBE FQDN DROP:"
 # iptables -I INPUT -s $(dig +short "$OS_FQDN" | tail -1) -j DROP
 
+{{ if .Config.SecurityPatchPackages }}
+logger -t master-startup.sh "installing red hat cdn configuration on $(hostname)"
+cat >/var/lib/yum/client-cert.pem <<'EOF'
+{{ CertAsBytes .Config.Certificates.PackageRepository.Cert | String }}
+EOF
+cat >/var/lib/yum/client-key.pem <<'EOF'
+{{ PrivateKeyAsBytes .Config.Certificates.PackageRepository.Key | String }}
+EOF
+# TODO: delete the following section after all clusters are run with a vm image with kickstart.repo baked in
+cat > /etc/yum.repos.d/kickstart.repo <<'EOF'
+[rhel-7-server-rpms]
+name=Red Hat Enterprise Linux 7 Server (RPMs)
+baseurl=https://cdn.redhat.com/content/dist/rhel/server/7/7Server/$basearch/os
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+sslcacert=/etc/rhsm/ca/redhat-uep.pem
+sslclientcert=/var/lib/yum/client-cert.pem
+sslclientkey=/var/lib/yum/client-key.pem
+enabled=yes
+
+[rhel-7-server-extras-rpms]
+name=Red Hat Enterprise Linux 7 Server - Extras (RPMs)
+baseurl=https://cdn.redhat.com/content/dist/rhel/server/7/7Server/$basearch/extras/os
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+sslcacert=/etc/rhsm/ca/redhat-uep.pem
+sslclientcert=/var/lib/yum/client-cert.pem
+sslclientkey=/var/lib/yum/client-key.pem
+enabled=yes
+
+[rhel-7-server-ose-3.11-rpms]
+name=Red Hat OpenShift Container Platform 3.11 (RPMs)
+baseurl=https://cdn.redhat.com/content/dist/rhel/server/7/7Server/$basearch/ose/3.11/os
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+sslcacert=/etc/rhsm/ca/redhat-uep.pem
+sslclientcert=/var/lib/yum/client-cert.pem
+sslclientkey=/var/lib/yum/client-key.pem
+enabled=yes
+EOF
+
+logger -t master-startup.sh "installing ARO security updates [{{ StringsJoin .Config.SecurityPatchPackages ", " }}] on $(hostname)"
+while ! yum install -y -q {{ StringsJoin .Config.SecurityPatchPackages " " }}; do
+  logger -t master-startup.sh "retrying ARO security updates installation"
+  sleep 1
+done
+
+logger -t master-startup.sh "removing red hat cdn configuration on $(hostname)"
+yum clean all
+rm -rf /var/lib/yum/client-cert.pem /var/lib/yum/client-key.pem
+
+if ! needs-restarting -r &>/dev/null; then
+  # reboot is done with a trap. waagent doesn't run on reboots therefore
+  # all instructions below will never get executed if the reboot is immediate
+  trap 'logger -t master-startup.sh "rebooting $(hostname) to complete ARO security updates"; reboot --reboot now' EXIT
+fi
+{{end}}
+
+
 if ! grep /var/lib/docker /etc/fstab; then
   systemctl stop docker-cleanup.timer
   systemctl stop docker-cleanup.service
