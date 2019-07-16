@@ -1,10 +1,10 @@
-hash: a433937b99a1a8e684d131e383faf2a80064256dca74e7389af2154e3463d87f
-updated: 2019-06-20T14:11:58.18611093+02:00
+hash: 39cf5100b930f863dbd1772f9f3265efea9775aa488b54d7843c419606709d7e
+updated: 2019-07-16T10:51:11.05316111+02:00
 imports:
 - name: code.cloudfoundry.org/clock
   version: 02e53af36e6c978af692887ed449b74026d76fec
 - name: contrib.go.opencensus.io/exporter/ocagent
-  version: 88230df77e734507cd633004f098a4febd80ba0b
+  version: f9129169651c35ecbdc1186c3ba4aa876ee62e1e
 - name: github.com/alecthomas/units
   version: 2efee857e7cfd4f3d0138cc3cbb1b4966962b93a
 - name: github.com/Azure/azure-sdk-for-go
@@ -84,7 +84,7 @@ imports:
   subpackages:
   - middleware
 - name: github.com/go-kit/kit
-  version: 7d4de0a2703de8e46bbff16759dea16481f39b2f
+  version: 150a65a7ec6156b4b640c1fd55f26fd3d475d656
   subpackages:
   - log
   - log/level
@@ -112,7 +112,7 @@ imports:
   subpackages:
   - gomock
 - name: github.com/golang/protobuf
-  version: b5d812f8a3706043e23a9cd5babf2e5423744d30
+  version: 6c65a5562fc06764971b7c5d05c76c75e84bdbf7
   subpackages:
   - jsonpb
   - proto
@@ -126,8 +126,10 @@ imports:
   - ptypes/struct
   - ptypes/timestamp
   - ptypes/wrappers
+- name: github.com/google/go-cmp
+  version: 6f77996f0c42f7b84e5a2b252227263f93432e9b
 - name: github.com/google/go-github
-  version: 7a8ff7a9b90963cdf49e959a5e8009ea03138ff1
+  version: 955a14c8ede799deb6529c0dc9b5b0b27d19a8bd
   subpackages:
   - github
 - name: github.com/google/go-querystring
@@ -145,7 +147,7 @@ imports:
   - compiler
   - extensions
 - name: github.com/grpc-ecosystem/grpc-gateway
-  version: cd0c8ef3533e9c04e6520cac37a81fe262fb0b34
+  version: bebc7374a79e1105d786ef3468b474e47d652511
   subpackages:
   - internal
   - runtime
@@ -276,10 +278,13 @@ imports:
   - security/clientset/versioned/typed/security/v1/fake
   - template/clientset/versioned/scheme
   - template/clientset/versioned/typed/template/v1
+  - user/clientset/versioned
+  - user/clientset/versioned/fake
   - user/clientset/versioned/scheme
   - user/clientset/versioned/typed/user/v1
+  - user/clientset/versioned/typed/user/v1/fake
 - name: github.com/opentracing/opentracing-go
-  version: 659c90643e714681897ec2521c60567dd21da733
+  version: 135aa78c6f95b4a199daf2f0470d231136cbbd0c
   subpackages:
   - log
 - name: github.com/pborman/uuid
@@ -342,7 +347,7 @@ imports:
 - name: github.com/spf13/pflag
   version: 24fa6976df40757dce6aea913e7b81ade90530e1
 - name: go.opencensus.io
-  version: df42942ad08fc1d7526b5a0361f909c351fabfa3
+  version: b4a14686f0a98096416fe1b4cb848e384fb2b22b
   subpackages:
   - internal
   - internal/tagencoding
@@ -437,7 +442,7 @@ imports:
   subpackages:
   - rate
 - name: google.golang.org/api
-  version: 890e5eb51fe205e56dc55eb68d63e82039730816
+  version: aa15faf3c8a1cffc77fc3dabe95703bb12c5f6a9
   subpackages:
   - support/bundler
 - name: google.golang.org/appengine
