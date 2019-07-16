@@ -2,10 +2,10 @@ package sync
 
 import (
 	"errors"
+	"github.com/google/go-cmp/cmp"
 	"reflect"
 	"strings"
 
-	"github.com/go-test/deep"
 	"github.com/sirupsen/logrus"
 	kerrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
@@ -247,7 +247,7 @@ func printDiff(log *logrus.Entry, existing, o *unstructured.Unstructured) bool {
 	gk := o.GroupVersionKind().GroupKind()
 	diffShown := false
 	if gk.String() != "Secret" {
-		for _, diff := range deep.Equal(*existing, *o) {
+		for _, diff := range cmp.Diff(*existing, *o) {
 			log.Info("- " + diff)
 			diffShown = true
 		}

@@ -1,12 +1,11 @@
 package plugin
 
 import (
+	"github.com/google/go-cmp/cmp"
 	"reflect"
 	"testing"
 
 	"github.com/Azure/go-autorest/autorest/to"
-	"github.com/go-test/deep"
-
 	"github.com/openshift/openshift-azure/pkg/api"
 	"github.com/openshift/openshift-azure/test/util/populate"
 	"github.com/openshift/openshift-azure/test/util/tls"
@@ -111,6 +110,6 @@ func TestToInternal(t *testing.T) {
 	internal := internalPluginConfig()
 	output, _ := ToInternal(&external, &api.Config{PluginVersion: "Versions.key"}, true)
 	if !reflect.DeepEqual(*output, internal) {
-		t.Errorf("unexpected diff %s", deep.Equal(*output, internal))
+		t.Errorf("unexpected diff %s", cmp.Diff(*output, internal))
 	}
 }

@@ -2,10 +2,10 @@ package config
 
 import (
 	"bytes"
+	"github.com/google/go-cmp/cmp"
 	"reflect"
 	"testing"
 
-	"github.com/go-test/deep"
 	uuid "github.com/satori/go.uuid"
 
 	"github.com/openshift/openshift-azure/pkg/api"
@@ -211,6 +211,6 @@ func TestInvalidateSecrets(t *testing.T) {
 
 	// compare certs from saved and cs
 	if !reflect.DeepEqual(cs, saved) {
-		t.Errorf("expected saved and cs config blobs to be equal: %s", deep.Equal(cs, saved))
+		t.Errorf("expected saved and cs config blobs to be equal: %s", cmp.Diff(cs, saved))
 	}
 }

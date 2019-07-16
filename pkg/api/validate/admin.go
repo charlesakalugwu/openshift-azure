@@ -3,10 +3,7 @@ package validate
 import (
 	"errors"
 	"fmt"
-	"reflect"
-
-	"github.com/go-test/deep"
-
+	"github.com/google/go-cmp/cmp"
 	"github.com/openshift/openshift-azure/pkg/api"
 )
 
@@ -80,8 +77,8 @@ func (v *AdminAPIValidator) validateUpdateContainerService(cs, oldCs *api.OpenSh
 	old.Config.Images = cs.Config.Images
 	old.Config.SecurityPatchPackages = cs.Config.SecurityPatchPackages
 
-	if !reflect.DeepEqual(cs, old) {
-		errs = append(errs, fmt.Errorf("invalid change %s", deep.Equal(cs, old)))
+	if diff := cmp.Diff(cs, old); diff != "" {
+		errs = append(errs, fmt.Errorf("invalid change %s", diff))
 	}
 
 	return

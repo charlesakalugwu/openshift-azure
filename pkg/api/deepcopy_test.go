@@ -2,10 +2,9 @@ package api
 
 import (
 	"bytes"
+	"github.com/google/go-cmp/cmp"
 	"reflect"
 	"testing"
-
-	"github.com/go-test/deep"
 
 	"github.com/openshift/openshift-azure/test/util/populate"
 )
@@ -24,7 +23,7 @@ func TestDeepCopy(t *testing.T) {
 
 	copy := cs.DeepCopy()
 	if !reflect.DeepEqual(cs, copy) {
-		t.Errorf("OpenShiftManagedCluster differed after DeepCopy: %s", deep.Equal(cs, copy))
+		t.Errorf("OpenShiftManagedCluster differed after DeepCopy: %s", cmp.Diff(cs, copy))
 	}
 	copy.Tags["test"] = "updated"
 	copy.Config.ImageVersion = "1"

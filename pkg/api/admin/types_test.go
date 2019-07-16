@@ -3,6 +3,7 @@ package admin
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/google/go-cmp/cmp"
 	"reflect"
 	"regexp"
 	"strings"
@@ -10,7 +11,6 @@ import (
 
 	"github.com/Azure/go-autorest/autorest/to"
 	"github.com/davecgh/go-spew/spew"
-	"github.com/go-test/deep"
 
 	"github.com/openshift/openshift-azure/pkg/api"
 	"github.com/openshift/openshift-azure/test/util/populate"
@@ -304,7 +304,7 @@ func TestEnsureMasterProfileExists(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(unmarshalledOc.Properties.MasterPoolProfile, populatedOc.Properties.MasterPoolProfile) {
-		t.Errorf("json.Unmarshal returned unexpected result\n%#v\n", deep.Equal(unmarshalledOc.Properties.MasterPoolProfile, populatedOc.Properties.MasterPoolProfile))
+		t.Errorf("json.Unmarshal returned unexpected result\n%#v\n", cmp.Diff(unmarshalledOc.Properties.MasterPoolProfile, populatedOc.Properties.MasterPoolProfile))
 	}
 }
 

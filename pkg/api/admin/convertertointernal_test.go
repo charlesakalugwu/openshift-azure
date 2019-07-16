@@ -3,12 +3,11 @@ package admin
 import (
 	"crypto/x509"
 	"errors"
+	"github.com/google/go-cmp/cmp"
 	"reflect"
 	"testing"
 
 	"github.com/Azure/go-autorest/autorest/to"
-	"github.com/go-test/deep"
-
 	"github.com/openshift/openshift-azure/pkg/api"
 	"github.com/openshift/openshift-azure/pkg/util/tls"
 	"github.com/openshift/openshift-azure/test/util/populate"
@@ -297,7 +296,7 @@ func TestToInternal(t *testing.T) {
 		}
 		if err == nil {
 			if !reflect.DeepEqual(output, expected) {
-				t.Errorf("%s: unexpected diff %s", test.name, deep.Equal(output, expected))
+				t.Errorf("%s: unexpected diff %s", test.name, cmp.Diff(output, expected))
 			}
 		}
 	}
@@ -311,6 +310,6 @@ func TestRoundTrip(t *testing.T) {
 	}
 	end := FromInternal(internal)
 	if !reflect.DeepEqual(start, end) {
-		t.Errorf("unexpected diff %s", deep.Equal(start, end))
+		t.Errorf("unexpected diff %s", cmp.Diff(start, end))
 	}
 }
