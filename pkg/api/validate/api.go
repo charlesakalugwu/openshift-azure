@@ -51,6 +51,9 @@ func (v *APIValidator) validateUpdateContainerService(cs, oldCs *api.OpenShiftMa
 	// validating ProvisioningState is the RP's responsibility
 	old.Properties.ProvisioningState = cs.Properties.ProvisioningState
 
+	old.Properties.MonitorProfile.WorkspaceID = cs.Properties.MonitorProfile.WorkspaceID
+	old.Properties.MonitorProfile.WorkspaceKey = cs.Properties.MonitorProfile.WorkspaceKey
+
 	for i, app := range old.Properties.AgentPoolProfiles {
 		for _, newApp := range cs.Properties.AgentPoolProfiles {
 			if newApp.Name == app.Name {
