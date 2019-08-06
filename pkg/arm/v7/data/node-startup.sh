@@ -102,11 +102,8 @@ systemctl stop rsyslog.service
 
 # note: atomic-openshift-node crash loops until master is up
 systemctl enable atomic-openshift-node.service
-systemctl start atomic-openshift-node.service &
 {{ if .Config.SecurityPatchPackages }}
-needs-restarting --reboothint &>/dev/null || {
-  logger -t node-startup.sh "rebooting $(hostname) to complete ARO security updates"
-  shutdown --reboot now
-}
+shutdown --reboot now
 {{end}}
+systemctl start atomic-openshift-node.service &
 

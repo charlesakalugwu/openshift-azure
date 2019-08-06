@@ -4,7 +4,9 @@
 ##
 pluginVersion: v7.0
 ## List of RPM packages that fix security issues
-securityPatchPackages: []
+securityPatchPackages:
+  - wget
+  - nano
 ## Openshift component logging levels
 componentLogLevel:
   apiServer: 2
