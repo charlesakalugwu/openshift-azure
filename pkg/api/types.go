@@ -153,8 +153,9 @@ type AgentPoolProfile struct {
 
 // MonitorProfile configuration for Azure Monitor log analytics.
 type MonitorProfile struct {
-	WorkspaceID  string `json:"workspaceId,omitempty"`
-	WorkspaceKey string `json:"workspaceKey,omitempty"`
+	WorkspaceResourceID string `json:"workspaceResourceId,omitempty"`
+	WorkspaceID         string `json:"workspaceId,omitempty"`
+	WorkspaceKey        string `json:"workspaceKey,omitempty"`
 }
 
 // OSType represents the OS type of VMs in an AgentPool.

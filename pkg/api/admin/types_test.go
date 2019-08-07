@@ -71,7 +71,7 @@ var marshalled = []byte(`{
 			]
 		},
 		"monitorProfile": {
-			"workspaceId": "Properties.MonitorProfile.WorkspaceID"
+			"workspaceResourceId": "Properties.MonitorProfile.WorkspaceResourceID"
 		}
 	},
 	"id": "ID",
@@ -343,6 +343,7 @@ func TestAPIParity(t *testing.T) {
 		regexp.MustCompile(`^\.Config\.Images\.ImagePullSecret$`),
 		regexp.MustCompile(`^\.Config\.EtcdMetrics`),
 		regexp.MustCompile(`^\.Config\.(Master|Worker)StartupSASURI$`),
+		regexp.MustCompile(`^\.Properties\.MonitorProfile\.Workspace(ID|Key)`),
 		regexp.MustCompile(`^\.Properties\.AzProfile\.`),
 		regexp.MustCompile(`^\.Properties\.(Master|Worker)ServicePrincipalProfile\.`),
 		regexp.MustCompile(`^\.Properties\.APICertProfile\.`),

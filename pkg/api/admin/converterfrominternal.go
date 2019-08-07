@@ -42,7 +42,7 @@ func FromInternal(cs *api.OpenShiftManagedCluster) *OpenShiftManagedCluster {
 		PeerVnetID: cs.Properties.NetworkProfile.PeerVnetID,
 	}
 	oc.Properties.MonitorProfile = &MonitorProfile{
-		WorkspaceID: &cs.Properties.MonitorProfile.WorkspaceID,
+		WorkspaceResourceID: &cs.Properties.MonitorProfile.WorkspaceResourceID,
 	}
 
 	oc.Properties.RouterProfiles = make([]RouterProfile, len(cs.Properties.RouterProfiles))
