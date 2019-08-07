@@ -352,6 +352,32 @@ var translations = map[string][]struct {
 			Template: "{{ .Config.GenevaLoggingControlPlaneRegion }}",
 		},
 	},
+	"DaemonSet.apps/openshift-azure-logging/omsagent": {
+		{
+			Path:     jsonpath.MustCompile("$.spec.template.spec.containers[0].image"),
+			Template: "{{ .Config.Images.MonitorAgent }}",
+		},
+		{
+			Path:     jsonpath.MustCompile("$.spec.template.spec.containers[0].env[?(@.name='WSID')].value"),
+			Template: "{{ .ContainerService.Properties.MonitorProfile.WorkspaceID }}",
+		},
+		{
+			Path:     jsonpath.MustCompile("$.spec.template.spec.containers[0].env[?(@.name='KEY')].value"),
+			Template: "{{ .ContainerService.Properties.MonitorProfile.WorkspaceKey }}",
+		},
+		{
+			Path:     jsonpath.MustCompile("$.spec.template.spec.containers[0].env[?(@.name='ACS_RESOURCE_NAME')].value"),
+			Template: "{{ .ContainerService.Name }}",
+		},
+		{
+			Path:     jsonpath.MustCompile("$.spec.template.spec.containers[0].env[?(@.name='AKS_RESOURCE_ID')].value"),
+			Template: "{{ .ContainerService.ID }}",
+		},
+		{
+			Path:     jsonpath.MustCompile("$.spec.template.spec.containers[0].env[?(@.name='AKS_REGION')].value"),
+			Template: "{{ .ContainerService.Location }}",
+		},
+	},
 	"DaemonSet.apps/openshift-template-service-broker/apiserver": {
 		{
 			Path:     jsonpath.MustCompile("$.spec.template.spec.containers[0].image"),
