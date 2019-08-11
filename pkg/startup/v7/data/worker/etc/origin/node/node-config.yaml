@@ -33,7 +33,7 @@ kubeletArguments:
   - RotateKubeletClientCertificate=true,RotateKubeletServerCertificate=true
   max-pods:
   - "50"
-  image-gc-low-threshold: 
+  image-gc-low-threshold:
   - "60"
   maximum-dead-containers:
   - "250"
@@ -45,6 +45,8 @@ kubeletArguments:
   - {{ print "node-role.kubernetes.io/" .Role "=true" | quote }}
   pod-manifest-path:
   - /etc/origin/node/pods
+  read-only-port:
+  - "10255"
   rotate-certificates:
   - "true"
   runtime-request-timeout:
