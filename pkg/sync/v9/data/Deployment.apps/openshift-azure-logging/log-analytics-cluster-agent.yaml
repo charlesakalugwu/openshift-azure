@@ -15,7 +15,7 @@ spec:
       labels:
         agentVersion: 1.10.0.1
         app: log-analytics-cluster-agent
-        dockerProviderVersion: 6.0.0-0
+        dockerProviderVersion: 7.0.0-0
         rsName: log-analytics-cluster-agent
     spec:
       containers:
@@ -49,6 +49,8 @@ spec:
         - containerPort: 25225
         - containerPort: 25224
           protocol: UDP
+        - containerPort: 25227
+          name: in-rs-tcp
         resources:
           limits:
             cpu: 150m

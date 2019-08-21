@@ -15,7 +15,7 @@ spec:
       labels:
         agentVersion: 1.10.0.1
         app: log-analytics-node-agent
-        dockerProviderVersion: 6.0.0-0
+        dockerProviderVersion: 7.0.0-0
         dsName: log-analytics-node-agent
     spec:
       containers:
