@@ -1,5 +1,10 @@
 #!/bin/bash -ex
 
+# drop all traffic to the kubelet read-only port which doesn't originate from localhost
+# TODO: delete these iptables rules after the azure-monitor team fixes their agent to access the authenticated port
+iptables --insert INPUT --protocol tcp --source localhost --dport 10255 --jump ACCEPT
+iptables --insert INPUT --protocol tcp --dport 10255 --jump DROP
+
 {{ if .Config.SecurityPatchPackages }}
 logger -t node-startup.sh "installing red hat cdn configuration on $(hostname)"
 cat >/var/lib/yum/client-cert.pem <<'EOF'
