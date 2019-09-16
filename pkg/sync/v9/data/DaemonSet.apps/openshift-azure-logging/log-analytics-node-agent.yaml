@@ -31,10 +31,9 @@ spec:
         - name: CONTROLLER_TYPE
           value: DaemonSet
         - name: NODE_IP
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: status.hostIP
+          value: localhost
+        - name: REPLICASET_SERVICE_ENDPOINT
+          value: healthmodel-replicaset-service.openshift-azure-logging
         image: '*** GENERATED ***'
         livenessProbe:
           exec:
@@ -81,6 +80,7 @@ spec:
         - mountPath: /etc/rsyslog.d/95-omsagent.conf
           name: log-analytics-rsyslog-config
           subPath: rsyslog.conf
+      hostNetwork: true
       nodeSelector:
         beta.kubernetes.io/os: linux
         node-role.kubernetes.io/compute: "true"
