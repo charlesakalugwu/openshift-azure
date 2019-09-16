@@ -280,6 +280,7 @@
 // data/CustomResourceDefinition.apiextensions.k8s.io/bundlebindings.automationbroker.io.yaml
 // data/CustomResourceDefinition.apiextensions.k8s.io/bundleinstances.automationbroker.io.yaml
 // data/CustomResourceDefinition.apiextensions.k8s.io/bundles.automationbroker.io.yaml
+// data/CustomResourceDefinition.apiextensions.k8s.io/healthstates.azmon.container.insights.yaml
 // data/DaemonSet.apps/default/docker-registry.yaml
 // data/DaemonSet.apps/default/router.yaml
 // data/DaemonSet.apps/kube-service-catalog/apiserver.yaml
@@ -455,6 +456,7 @@
 // data/Service/default/router.yaml
 // data/Service/kube-service-catalog/apiserver.yaml
 // data/Service/kube-service-catalog/controller-manager.yaml
+// data/Service/kube-system/healthmodel-replicaset-service.yaml
 // data/Service/openshift-ansible-service-broker/asb.yaml
 // data/Service/openshift-azure-branding/branding.yaml
 // data/Service/openshift-azure-monitoring/canary.yaml
@@ -6360,6 +6362,26 @@ func customresourcedefinitionApiextensionsK8sIoBundlesAutomationbrokerIoYaml() (
 	return a, nil
 }
 
+var _customresourcedefinitionApiextensionsK8sIoHealthstatesAzmonContainerInsightsYaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x74\x8f\xb1\x4e\xc5\x30\x0c\x45\xf7\x7c\x85\xbf\x20\xa8\x1b\xca\x0a\x03\x13\x03\x48\xec\x26\x35\xad\xd5\xc6\x8e\x62\xa7\x42\x7c\x3d\x4a\xab\x37\xbc\xe1\x8d\xb6\xee\xf1\xf1\xc5\xca\x5f\xd4\x8c\x55\x12\x60\x65\xfa\x75\x92\x31\x59\xdc\x9e\x2d\xb2\x3e\x1d\xd3\x37\x39\x4e\x61\x63\x99\x13\xbc\x74\x73\x2d\x1f\x64\xda\x5b\xa6\x57\xfa\x61\x61\x67\x95\x50\xc8\x71\x46\xc7\x14\x00\x04\x0b\x25\x58\x09\x77\x5f\xcd\xd1\xc9\x22\xfe\x15\x95\x98\x55\x1c\x59\xa8\x45\x16\xe3\x65\x75\x0b\x56\x29\x0f\x66\x69\xda\x6b\x82\x87\xb9\xeb\xaa\x8d\x28\xc0\xf5\xcb\xdb\x29\xf8\x1c\x82\x73\x5b\xf7\xde\x70\xbf\x17\x07\x00\xcb\x5a\x29\xc1\xfb\xc0\x2b\x66\x9a\x03\xc0\x71\xab\x7c\x4c\xe1\x3f\x00\x00\xff\xff\x5a\xdc\x11\x85\x02\x01\x00\x00")
+
+func customresourcedefinitionApiextensionsK8sIoHealthstatesAzmonContainerInsightsYamlBytes() ([]byte, error) {
+	return bindataRead(
+		_customresourcedefinitionApiextensionsK8sIoHealthstatesAzmonContainerInsightsYaml,
+		"CustomResourceDefinition.apiextensions.k8s.io/healthstates.azmon.container.insights.yaml",
+	)
+}
+
+func customresourcedefinitionApiextensionsK8sIoHealthstatesAzmonContainerInsightsYaml() (*asset, error) {
+	bytes, err := customresourcedefinitionApiextensionsK8sIoHealthstatesAzmonContainerInsightsYamlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "CustomResourceDefinition.apiextensions.k8s.io/healthstates.azmon.container.insights.yaml", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 var _daemonsetAppsDefaultDockerRegistryYaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xc4\x55\x4d\x6f\xe2\x30\x10\xbd\xf3\x2b\xac\x5e\x2a\x21\xf1\xd1\x43\x2f\xb9\x45\xc4\xd0\xa8\x34\xb0\x49\xda\x55\x4f\x91\xeb\x0c\xc5\xc2\xb1\xb3\xf6\x24\x2b\xf6\xd7\xaf\xa2\x40\x48\x48\x0b\x68\x2f\xeb\x13\x9a\xf1\x7b\x33\xef\x79\x98\xb0\x5c\xbc\x81\xb1\x42\x2b\x87\xb0\x3c\xb7\x93\xf2\x61\xb0\x13\x2a\x75\x88\xc7\x20\xd3\x2a\x02\x1c\x64\x80\x2c\x65\xc8\x9c\x01\x21\x92\x7d\x80\xb4\xd5\x2f\x42\x52\xcd\x77\x60\x46\x06\x3e\x85\x45\xb3\x77\x48\x0a\x1b\x56\x48\x1c\x10\xa2\x58\x06\xce\xf9\x85\x43\xdc\xe6\x8c\xc3\xe9\xb2\xcd\x81\x57\x7c\x16\x24\x70\xd4\xa6\xe6\xce\x18\xf2\xed\xb2\x55\xec\x62\x39\x84\x2c\x97\x0c\xe1\x80\x6d\xf5\x5b\x1d\xd9\xa1\xb9\x48\x44\xc8\xb1\x9d\xea\x70\xad\x90\x09\x05\xa6\x01\x8f\x08\xa8\xf2\xc4\x34\x3a\x08\x0d\xe9\xc2\x8f\xe2\xf0\x3d\x79\x8a\xe3\x75\xe2\x7a\x5e\xd8\x5c\x21\xa4\x64\xb2\x00\x87\x38\x8f\xd3\xe9\xf4\x0a\x32\xa0\x71\x1f\x88\x3c\xbf\x02\x8b\xe8\x2c\xec\x23\xe7\x46\x67\x4e\x2b\x58\x59\xcc\x0d\xe0\x33\xec\x43\xd8\x74\x33\x84\xec\x60\xef\x90\x9c\x59\xfb\x5b\x9b\xf4\x2c\xf7\xe5\x6b\x8e\xb6\x88\x17\x1a\x7b\xf1\x3d\x6f\x49\x7f\xba\x21\x4d\x42\xba\x5e\x45\x7e\xbc\x0a\xdf\x93\xd5\x9a\x06\xd1\x93\x3f\x8f\x13\x1a\xcc\x57\xe1\x8c\xfe\x78\x5d\xc5\x6e\x5f\xf3\xdd\x86\x49\x0b\x77\x57\x74\xc7\xcb\x28\x79\xa6\xef\x7d\xf8\x04\x90\x4f\x6a\xb5\x76\x72\x6c\x78\xbc\x83\x7d\x8f\xf0\xd4\x90\x47\xe7\xee\xeb\x32\x4e\x8e\x25\xfa\xac\x67\x06\x8c\x0f\x63\x33\xb6\x25\xbf\xf2\xb8\xa7\x2a\x11\x0d\xdf\x68\xf8\xcd\x88\xfc\x7b\x81\xd9\x2a\x98\xfb\x8b\xd7\xd0\x8d\xfd\x55\x90\xac\xdd\xf8\xe9\x1b\x53\x8e\xdc\x13\xae\xd5\x46\x7c\x8e\xf7\x99\xbc\xc1\xe4\x19\x0d\x63\x7f\xee\xcf\xdc\x98\xde\x6a\x36\x37\xd8\x5c\x15\x19\xfb\x04\x87\xdc\x0f\x87\x43\xb2\xa0\x01\x0d\xdd\x98\x7a\x64\x38\x1c\xde\x37\x57\xa4\x28\x41\x81\xb5\x6b\xa3\x3f\xa0\x3d\x9b\xd5\x94\x2d\x00\xbb\xe3\x9a\x33\xdc\x3a\x64\xb2\x05\x26\x71\xfb\xa7\x9b\xd2\x06\x1d\xd2\x71\xab\x3a\x96\x6f\xa1\xd2\x56\x49\x8a\x5a\x19\xa1\x04\x0a\x26\x3d\x90\x6c\x1f\x01\xd7\x2a\xb5\x0e\x79\x68\x63\x51\x64\xa0\x0b\x6c\x92\x8f\x4d\xae\x76\xab\xb5\xdd\x4e\x1d\xd8\xf6\x8e\x68\xd6\xc8\xba\xdf\x9b\x01\x96\x8a\xff\x21\xfc\x7b\x59\x06\xac\x2e\x0c\x07\xdb\x2e\x6d\xe0\x57\x01\x16\x6d\xb7\x1d\x9e\x17\x95\x5b\xd3\xac\x13\xcd\x20\xd3\xd5\x5a\x7d\x98\x4e\x5f\x44\x93\x29\xb5\x2c\x32\x78\xd1\x85\xea\xba\x93\x55\x91\x75\xad\xab\x35\x49\x2d\xc6\xae\xcf\x23\x0e\x06\xc5\x46\x70\x86\x60\x2f\xf0\xf4\xde\xe5\x6c\x8f\xd5\x7f\x80\x43\x56\xe9\x14\xa2\xce\x07\xe8\x18\x1d\x19\x2d\x61\xbc\x2b\x3e\xc0\x28\x40\xb0\x63\xa1\x27\x42\x6d\x0c\x73\xc8\x1d\x9a\xa2\xd9\x51\x16\x4c\x29\x38\xb8\x9c\x57\x7d\x04\x5f\x8d\x46\xed\x40\xeb\x5b\x72\x8b\xb0\xda\x8e\xb6\xed\x75\x24\xb8\x8a\x1d\x5d\xd0\x7b\x3b\x6f\x8d\xfa\x1b\x00\x00\xff\xff\x11\x10\x13\x07\x27\x08\x00\x00")
 
 func daemonsetAppsDefaultDockerRegistryYamlBytes() ([]byte, error) {
@@ -9856,6 +9878,26 @@ func serviceKubeServiceCatalogControllerManagerYaml() (*asset, error) {
 	}
 
 	info := bindataFileInfo{name: "Service/kube-service-catalog/controller-manager.yaml", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _serviceKubeSystemHealthmodelReplicasetServiceYaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x2c\x8c\x3d\x6b\x03\x41\x0c\x44\xfb\xfd\x15\xc2\xbd\x8a\x1c\x84\xc0\xb6\xe9\x83\x21\x21\xbd\xa2\x1b\xce\x8b\xf7\x0b\x49\x36\xf8\xdf\x07\xdf\xb9\x1b\x1e\xf3\xde\xb5\xf4\x35\xd3\x37\xec\x5e\x14\x49\x66\xf9\x85\x79\x19\x3d\xd3\xfd\x2d\x35\x84\xac\x12\x92\x13\x51\x97\x86\x4c\x17\x48\x8d\x4b\x1b\x2b\x2a\x1b\x66\x2d\x2a\x8e\x60\x7f\xf9\xc7\xcd\xa7\x28\x32\x5d\x6f\x7f\x60\x7f\x78\xa0\x25\x9f\xd0\x67\xc5\x51\xa1\x31\xec\xb9\x89\xcc\xbf\xf6\xea\xa9\x8e\x8d\xa5\x4b\x7d\x44\x51\x67\xad\x37\x0f\x18\xcb\x86\x1e\xa7\x44\x34\x87\x85\x1f\x0a\xd3\xb4\x11\x43\x47\xcd\xf4\xf3\x79\xde\xd9\x71\xc8\xb4\xbc\x2f\xcb\xc7\x8b\x84\xd8\x86\x38\xef\xbc\x74\x36\xe7\xd0\x99\xfe\x03\x00\x00\xff\xff\x2c\x6f\xde\x41\xee\x00\x00\x00")
+
+func serviceKubeSystemHealthmodelReplicasetServiceYamlBytes() ([]byte, error) {
+	return bindataRead(
+		_serviceKubeSystemHealthmodelReplicasetServiceYaml,
+		"Service/kube-system/healthmodel-replicaset-service.yaml",
+	)
+}
+
+func serviceKubeSystemHealthmodelReplicasetServiceYaml() (*asset, error) {
+	bytes, err := serviceKubeSystemHealthmodelReplicasetServiceYamlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "Service/kube-system/healthmodel-replicaset-service.yaml", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -14772,6 +14814,7 @@ var _bindata = map[string]func() (*asset, error){
 	"CustomResourceDefinition.apiextensions.k8s.io/bundlebindings.automationbroker.io.yaml":                                      customresourcedefinitionApiextensionsK8sIoBundlebindingsAutomationbrokerIoYaml,
 	"CustomResourceDefinition.apiextensions.k8s.io/bundleinstances.automationbroker.io.yaml":                                     customresourcedefinitionApiextensionsK8sIoBundleinstancesAutomationbrokerIoYaml,
 	"CustomResourceDefinition.apiextensions.k8s.io/bundles.automationbroker.io.yaml":                                             customresourcedefinitionApiextensionsK8sIoBundlesAutomationbrokerIoYaml,
+	"CustomResourceDefinition.apiextensions.k8s.io/healthstates.azmon.container.insights.yaml":                                   customresourcedefinitionApiextensionsK8sIoHealthstatesAzmonContainerInsightsYaml,
 	"DaemonSet.apps/default/docker-registry.yaml":                                                                                daemonsetAppsDefaultDockerRegistryYaml,
 	"DaemonSet.apps/default/router.yaml":                                                                                         daemonsetAppsDefaultRouterYaml,
 	"DaemonSet.apps/kube-service-catalog/apiserver.yaml":                                                                         daemonsetAppsKubeServiceCatalogApiserverYaml,
@@ -14947,6 +14990,7 @@ var _bindata = map[string]func() (*asset, error){
 	"Service/default/router.yaml":                                                                                                        serviceDefaultRouterYaml,
 	"Service/kube-service-catalog/apiserver.yaml":                                                                                        serviceKubeServiceCatalogApiserverYaml,
 	"Service/kube-service-catalog/controller-manager.yaml":                                                                               serviceKubeServiceCatalogControllerManagerYaml,
+	"Service/kube-system/healthmodel-replicaset-service.yaml":                                                                            serviceKubeSystemHealthmodelReplicasetServiceYaml,
 	"Service/openshift-ansible-service-broker/asb.yaml":                                                                                  serviceOpenshiftAnsibleServiceBrokerAsbYaml,
 	"Service/openshift-azure-branding/branding.yaml":                                                                                     serviceOpenshiftAzureBrandingBrandingYaml,
 	"Service/openshift-azure-monitoring/canary.yaml":                                                                                     serviceOpenshiftAzureMonitoringCanaryYaml,
@@ -15531,9 +15575,10 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		}},
 	}},
 	"CustomResourceDefinition.apiextensions.k8s.io": {nil, map[string]*bintree{
-		"bundlebindings.automationbroker.io.yaml":  {customresourcedefinitionApiextensionsK8sIoBundlebindingsAutomationbrokerIoYaml, map[string]*bintree{}},
-		"bundleinstances.automationbroker.io.yaml": {customresourcedefinitionApiextensionsK8sIoBundleinstancesAutomationbrokerIoYaml, map[string]*bintree{}},
-		"bundles.automationbroker.io.yaml":         {customresourcedefinitionApiextensionsK8sIoBundlesAutomationbrokerIoYaml, map[string]*bintree{}},
+		"bundlebindings.automationbroker.io.yaml":    {customresourcedefinitionApiextensionsK8sIoBundlebindingsAutomationbrokerIoYaml, map[string]*bintree{}},
+		"bundleinstances.automationbroker.io.yaml":   {customresourcedefinitionApiextensionsK8sIoBundleinstancesAutomationbrokerIoYaml, map[string]*bintree{}},
+		"bundles.automationbroker.io.yaml":           {customresourcedefinitionApiextensionsK8sIoBundlesAutomationbrokerIoYaml, map[string]*bintree{}},
+		"healthstates.azmon.container.insights.yaml": {customresourcedefinitionApiextensionsK8sIoHealthstatesAzmonContainerInsightsYaml, map[string]*bintree{}},
 	}},
 	"DaemonSet.apps": {nil, map[string]*bintree{
 		"default": {nil, map[string]*bintree{
@@ -15826,6 +15871,9 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"kube-service-catalog": {nil, map[string]*bintree{
 			"apiserver.yaml":          {serviceKubeServiceCatalogApiserverYaml, map[string]*bintree{}},
 			"controller-manager.yaml": {serviceKubeServiceCatalogControllerManagerYaml, map[string]*bintree{}},
+		}},
+		"kube-system": {nil, map[string]*bintree{
+			"healthmodel-replicaset-service.yaml": {serviceKubeSystemHealthmodelReplicasetServiceYaml, map[string]*bintree{}},
 		}},
 		"openshift-ansible-service-broker": {nil, map[string]*bintree{
 			"asb.yaml": {serviceOpenshiftAnsibleServiceBrokerAsbYaml, map[string]*bintree{}},
