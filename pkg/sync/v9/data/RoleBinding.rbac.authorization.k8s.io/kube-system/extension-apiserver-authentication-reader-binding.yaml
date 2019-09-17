@@ -11,3 +11,6 @@ subjects:
 - kind: ServiceAccount
   name: service-catalog-apiserver
   namespace: kube-service-catalog
+- kind: ServiceAccount
+  name: metrics-server
+  namespace: openshift-azure-monitoring

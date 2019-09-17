@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: metrics-server
+  name: metrics-server
+  namespace: openshift-azure-monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metrics-server
+  template:
+    metadata:
+      labels:
+        app: metrics-server
+      name: metrics-server
+    spec:
+      containers:
+      - args:
+        - --secure-port=6443
+        - --tls-cert-file=/etc/pki/tls/private/tls.crt
+        - --tls-private-key-file=/etc/pki/tls/private/tls.key
+        image: '*** GENERATED ***'
+        name: metrics-server
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 10m
+            memory: 25Mi
+        volumeMounts:
+        - mountPath: /etc/pki/tls/private
+          name: tls-certificates
+          readOnly: true
+      serviceAccountName: metrics-server
+      volumes:
+      - name: tls-certificates
+        secret:
+          secretName: metrics-server

@@ -114,6 +114,12 @@ var translations = map[string][]struct {
 	// "{{ .Config.Foo }}", NOT "{{ .Config.Foo | quote }}").  This is because
 	// the translations operate on in-memory objects, not on serialised YAML.
 	// Correct quoting will be handled automatically by the marshaller.
+	"APIService.apiregistration.k8s.io/v1beta1.metrics.k8s.io": {
+		{
+			Path:     jsonpath.MustCompile("$.spec.caBundle"),
+			Template: "{{ Base64Encode (CertAsBytes .Config.Certificates.Ca.Cert) }}",
+		},
+	},
 	"APIService.apiregistration.k8s.io/v1beta1.servicecatalog.k8s.io": {
 		{
 			Path:     jsonpath.MustCompile("$.spec.caBundle"),
@@ -440,6 +446,12 @@ var translations = map[string][]struct {
 			Template: "{{ .Config.Images.MetricsBridge }}",
 		},
 	},
+	"Deployment.apps/openshift-azure-monitoring/metrics-server": {
+		{
+			Path:     jsonpath.MustCompile("$.spec.template.spec.containers[0].image"),
+			Template: "{{ .Config.Images.MetricsServer }}",
+		},
+	},
 	"Deployment.apps/openshift-console/console": {
 		{
 			Path:     jsonpath.MustCompile("$.spec.template.spec.containers[0].image"),
@@ -593,6 +605,16 @@ var translations = map[string][]struct {
 		{
 			Path:     jsonpath.MustCompile("$.stringData.'tls.key'"),
 			Template: "{{ String (PrivateKeyAsBytes .Config.Certificates.ServiceCatalogServer.Key) }}",
+		},
+	},
+	"Secret/openshift-azure-monitoring/metrics-server": {
+		{
+			Path:     jsonpath.MustCompile("$.stringData.'tls.crt'"),
+			Template: "{{ String (CertAsBytes .Config.Certificates.MetricsServer.Cert) }}",
+		},
+		{
+			Path:     jsonpath.MustCompile("$.stringData.'tls.key'"),
+			Template: "{{ String (PrivateKeyAsBytes .Config.Certificates.MetricsServer.Key) }}",
 		},
 	},
 	"Secret/openshift/redhat-registry": {
