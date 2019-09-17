@@ -104,6 +104,7 @@ type ImageConfig struct {
 	TLSProxy         string `json:"tlsProxy,omitempty"`
 
 	LogAnalyticsAgent string `json:"logAnalyticsAgent,omitempty"`
+	MetricsServer     string `json:"metricsServer,omitempty"`
 }
 
 // CertificateConfig contains all certificate configuration for the cluster.

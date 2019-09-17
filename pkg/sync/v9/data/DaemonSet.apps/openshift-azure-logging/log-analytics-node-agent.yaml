@@ -46,8 +46,11 @@ spec:
         name: log-analytics-node-agent
         ports:
         - containerPort: 25226
+          hostPort: 25226
         - containerPort: 25225
+          hostPort: 25225
         - containerPort: 25224
+          hostPort: 25224
           protocol: UDP
         resources:
           limits:
@@ -80,6 +83,7 @@ spec:
         - mountPath: /etc/rsyslog.d/95-omsagent.conf
           name: log-analytics-rsyslog-config
           subPath: rsyslog.conf
+      dnsPolicy: ClusterFirstWithHostNet
       hostNetwork: true
       nodeSelector:
         beta.kubernetes.io/os: linux

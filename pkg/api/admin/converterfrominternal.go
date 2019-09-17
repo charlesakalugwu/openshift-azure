@@ -219,5 +219,6 @@ func convertImageConfigToAdmin(in api.ImageConfig) *ImageConfig {
 		GenevaStatsd:              &in.GenevaStatsd,
 		MetricsBridge:             &in.MetricsBridge,
 		LogAnalyticsAgent:         &in.LogAnalyticsAgent,
+		MetricsServer:             &in.MetricsServer,
 	}
 }

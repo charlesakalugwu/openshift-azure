@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: metrics-server
+  name: metrics-server
+  namespace: openshift-azure-monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metrics-server
+  template:
+    metadata:
+      labels:
+        app: metrics-server
+      name: metrics-server
+    spec:
+      containers:
+      - image: '*** GENERATED ***'
+        name: metrics-server
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 10m
+            memory: 25Mi
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-dir
+      serviceAccountName: metrics-server
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+        node-role.kubernetes.io/infra: "true"
+      volumes:
+      - emptyDir: {}
+        name: tmp-dir

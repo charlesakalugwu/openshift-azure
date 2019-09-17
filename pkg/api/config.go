@@ -137,6 +137,7 @@ type ImageConfig struct {
 	MetricsBridge string `json:"metricsBridge,omitempty"`
 
 	LogAnalyticsAgent string `json:"logAnalyticsAgent,omitempty"`
+	MetricsServer     string `json:"metricsServer,omitempty"`
 
 	// ImagePullSecret defines the secret used to pull from the private registries, used system-wide
 	ImagePullSecret []byte `json:"imagePullSecret,omitempty"`
