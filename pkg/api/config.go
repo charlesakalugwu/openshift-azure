@@ -173,6 +173,7 @@ type CertificateConfig struct {
 	RegistryConsole      CertKeyPair      `json:"registryConsole,omitempty"`
 	Router               CertKeyPairChain `json:"-"`
 	ServiceCatalogServer CertKeyPair      `json:"serviceCatalogServer,omitempty"`
+	MetricsServer        CertKeyPair      `json:"metricsServer,omitempty"`
 
 	// misc certificates
 	BlackBoxMonitor CertKeyPair `json:"blackBoxMonitor,omitempty"`

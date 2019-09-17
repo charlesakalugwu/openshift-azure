@@ -163,6 +163,7 @@ func convertCertificateConfigToAdmin(in api.CertificateConfig) *CertificateConfi
 		RegistryConsole:      convertCertKeyPairToAdmin(in.RegistryConsole),
 		Router:               convertCertKeyPairChainToAdmin(in.Router),
 		ServiceCatalogServer: convertCertKeyPairToAdmin(in.ServiceCatalogServer),
+		MetricsServer:        convertCertKeyPairToAdmin(in.MetricsServer),
 		BlackBoxMonitor:      convertCertKeyPairToAdmin(in.BlackBoxMonitor),
 		GenevaLogging:        convertCertKeyPairToAdmin(in.GenevaLogging),
 		GenevaMetrics:        convertCertKeyPairToAdmin(in.GenevaMetrics),

@@ -485,6 +485,9 @@ func mergeCertificateConfig(in *CertificateConfig, out *api.CertificateConfig) {
 	if in.ServiceCatalogServer != nil {
 		mergeCertKeyPair(in.ServiceCatalogServer, &out.ServiceCatalogServer)
 	}
+	if in.MetricsServer != nil {
+		mergeCertKeyPair(in.MetricsServer, &out.MetricsServer)
+	}
 	if in.BlackBoxMonitor != nil {
 		mergeCertKeyPair(in.BlackBoxMonitor, &out.BlackBoxMonitor)
 	}

@@ -141,6 +141,7 @@ type CertificateConfig struct {
 	RegistryConsole      *Certificate      `json:"registryConsole,omitempty"`
 	Router               *CertificateChain `json:"router,omitempty"`
 	ServiceCatalogServer *Certificate      `json:"serviceCatalogServer,omitempty"`
+	MetricsServer        *Certificate      `json:"metricsServer,omitempty"`
 
 	// misc certificates
 	BlackBoxMonitor *Certificate `json:"blackBoxMonitor,omitempty"`

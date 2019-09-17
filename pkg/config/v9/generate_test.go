@@ -121,6 +121,7 @@ func testRequiredFields(cs *api.OpenShiftManagedCluster, t *testing.T) {
 	assertCert(c.Certificates.Registry, "Registry")
 	assertCert(c.Certificates.RegistryConsole, "RegistryConsole")
 	assertCert(c.Certificates.ServiceCatalogServer, "ServiceCatalogServer")
+	assertCert(c.Certificates.MetricsServer, "MetricsServer")
 	assertCert(c.Certificates.BlackBoxMonitor, "BlackBoxMonitor")
 
 	assert(len(c.SessionSecretAuth) != 0, "SessionSecretAuth")

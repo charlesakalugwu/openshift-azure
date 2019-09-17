@@ -205,6 +205,22 @@ func (g *simpleGenerator) Generate(template *pluginapi.Config, setVersionFields 
 		{
 			params: tls.CertParams{
 				Subject: pkix.Name{
+					CommonName: "metrics-server.openshift-azure-monitoring.svc",
+				},
+				DNSNames: []string{
+					"metrics-server.openshift-azure-monitoring.svc",
+					"metrics-server.openshift-azure-monitoring.local",
+				},
+				ExtKeyUsage: []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
+				SigningKey:  c.Certificates.Ca.Key,
+				SigningCert: c.Certificates.Ca.Cert,
+			},
+			key:  &c.Certificates.MetricsServer.Key,
+			cert: &c.Certificates.MetricsServer.Cert,
+		},
+		{
+			params: tls.CertParams{
+				Subject: pkix.Name{
 					CommonName: "system:serviceaccount:openshift-infra:node-bootstrapper",
 				},
 				ExtKeyUsage: []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth},
@@ -443,6 +459,8 @@ func (g *simpleGenerator) InvalidateCertificates() (err error) {
 	g.cs.Config.Certificates.MasterProxyClient = api.CertKeyPair{}
 	g.cs.Config.Certificates.MasterServer = api.CertKeyPair{}
 	g.cs.Config.Certificates.AggregatorFrontProxy = api.CertKeyPair{}
+
+	g.cs.Config.Certificates.MetricsServer = api.CertKeyPair{}
 
 	return nil
 }
