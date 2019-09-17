@@ -56,6 +56,7 @@ versions:
       sync: quay.io/openshift-on-azure/azure:v7.0
       tlsProxy: quay.io/openshift-on-azure/azure:v7.0
       logAnalyticsAgent: mcr.microsoft.com/azuremonitor/containerinsights/ciprod:ciprod07092019
+      metricsServer: k8s.gcr.io/metrics-server-amd64:v0.3.4
   v7.1:
     imageOffer: osa
     imagePublisher: redhat
@@ -97,6 +98,7 @@ versions:
       sync: quay.io/openshift-on-azure/azure:v7.1
       tlsProxy: quay.io/openshift-on-azure/azure:v7.1
       logAnalyticsAgent: mcr.microsoft.com/azuremonitor/containerinsights/ciprod:ciprod07092019
+      metricsServer: k8s.gcr.io/metrics-server-amd64:v0.3.4
   v9.0:
     imageOffer: osa
     imagePublisher: redhat
@@ -138,6 +140,7 @@ versions:
       sync: quay.io/openshift-on-azure/azure:latest
       tlsProxy: quay.io/openshift-on-azure/azure:latest
       logAnalyticsAgent: mcr.microsoft.com/azuremonitor/containerinsights/ciprod:ciprod07092019
+      metricsServer: k8s.gcr.io/metrics-server-amd64:v0.3.4
 ## certificates, used to authenticate to external systems
 ## Red Hat CDN client certificates
   #packageRepository:

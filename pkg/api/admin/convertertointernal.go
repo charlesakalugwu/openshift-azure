@@ -620,5 +620,8 @@ func mergeImageConfig(in *ImageConfig, out *api.ImageConfig) {
 	if in.LogAnalyticsAgent != nil {
 		out.LogAnalyticsAgent = *in.LogAnalyticsAgent
 	}
+	if in.MetricsServer != nil {
+		out.MetricsServer = *in.MetricsServer
+	}
 	return
 }

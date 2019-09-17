@@ -213,7 +213,8 @@ var marshalled = []byte(`{
 			"genevaTDAgent": "Config.Images.GenevaTDAgent",
 			"genevaStatsd": "Config.Images.GenevaStatsd",
 			"metricsBridge": "Config.Images.MetricsBridge",
-			"logAnalyticsAgent": "Config.Images.LogAnalyticsAgent"
+			"logAnalyticsAgent": "Config.Images.LogAnalyticsAgent",
+			"metricsServer": "Config.Images.MetricsServer"
 		},
 		"serviceCatalogClusterId": "01010101-0101-0101-0101-010101010101",
 		"genevaLoggingSector": "Config.GenevaLoggingSector",
