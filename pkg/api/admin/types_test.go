@@ -71,6 +71,7 @@ var marshalled = []byte(`{
 			]
 		},
 		"monitorProfile": {
+			"workspaceId": "Properties.MonitorProfile.WorkspaceID",
 			"workspaceResourceId": "Properties.MonitorProfile.WorkspaceResourceID"
 		}
 	},
